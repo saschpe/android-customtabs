@@ -18,10 +18,16 @@
     package="saschpe.android.customtabs"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application>
 
         <activity
             android:name=".WebViewActivity" />
+
+        <meta-data
+            android:name="android.webkit.WebView.MetricsOptOut"
+            android:value="true" />
 
     </application>
 

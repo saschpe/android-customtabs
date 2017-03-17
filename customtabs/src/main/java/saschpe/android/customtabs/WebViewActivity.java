@@ -21,6 +21,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 public class WebViewActivity extends AppCompatActivity {
     /**
@@ -54,5 +55,19 @@ public class WebViewActivity extends AppCompatActivity {
 
         WebView webView = (WebView) findViewById(R.id.web_view);
         webView.loadUrl(url);
+
+        // No title provided. Use the website's once it's loaded...
+        if (title == null) {
+            webView.setWebViewClient(new WebViewClient() {
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    if (actionBar != null) {
+                        actionBar.setTitle(view.getTitle());
+                        actionBar.setSubtitle(url);
+                    }
+                }
+            });
+        }
     }
 }
