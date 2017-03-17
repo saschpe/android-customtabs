@@ -77,7 +77,7 @@ bintray {
     configurations = ['archives'] //When uploading configuration files
     pkg {
         repo = 'maven'
-        name = 'customtabs'
+        name = 'android-customtabs'
         userOrg = 'saschpe'
         websiteUrl = siteUrl
         issueTrackerUrl = 'https://github.com/saschpe/android-customtabs/issues'
