@@ -1,0 +1,156 @@
+/*
+ * Copyright 2017 Sascha Peilicke
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.file) {
+    Properties localProperties = new Properties()
+    localPropertiesFile.withInputStream { localProperties.load(it) }
+    localProperties.each { key, value ->
+        properties.ext.set(key, value)
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionName '1.0.0'
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+
+    buildTypes {
+        debug {
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            consumerProguardFiles 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    // Runtime dependencies
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.android.support:customtabs:25.3.0'
+}
+
+group = 'saschpe.android'
+version = android.defaultConfig.versionName
+
+ext {
+    siteUrl = 'https://github.com/saschpe/android-customtabs'
+    gitUrl = 'https://github.com/saschpe/android-customtabs.git'
+    descr = 'My often used Android classes.'
+}
+
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+bintray {
+    user = project.properties["bintray.user"]
+    key = project.properties["bintray.apikey"]
+
+    configurations = ['archives'] //When uploading configuration files
+    pkg {
+        repo = 'maven'
+        name = 'customtabs'
+        userOrg = 'saschpe'
+        websiteUrl = siteUrl
+        issueTrackerUrl = 'https://github.com/saschpe/android-customtabs/issues'
+        vcsUrl = gitUrl
+        licenses = ['Apache-2.0']
+        desc = descr
+        labels = ['aar', 'android']
+        publish = true
+        publicDownloadNumbers = true
+
+        githubRepo = 'saschpe/android-customtabs'
+        githubReleaseNotesFile = 'README.md'
+
+        version {
+            name = android.defaultConfig.versionName
+            desc = descr
+            gpg {
+                sign = true
+            }
+        }
+    }
+}
+
+task createPom {
+    pom {
+        project {
+            packaging 'aar'
+
+            name project.name
+            description descr
+            url siteUrl
+            inceptionYear '2017'
+
+            licenses {
+                license {
+                    name 'The Apache Software License, Version 2.0'
+                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                }
+            }
+            scm {
+                connection gitUrl
+                developerConnection gitUrl
+                url siteUrl
+            }
+            developers {
+                developer {
+                    id 'saschpe'
+                    name 'Sascha Peilicke'
+                    email 'sascha@peilicke.de'
+                }
+            }
+        }
+    }.writeTo("$buildDir/poms/pom-default.xml").writeTo("pom.xml")
+}
+build.dependsOn createPom
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    failOnError false
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}

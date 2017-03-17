@@ -1,0 +1,44 @@
+#!/bin/bash
+#
+# Script to create a new Android versionName commit
+#
+# Semantic Versioning: MAJOR.MINOR.PATCH
+
+. "tools/inc.functions"
+
+if [ $# -ne 1 ] ; then
+    die "Usage: $0 [VERSION]\n\n\tExample: $0 0.0.1"
+fi
+
+#APP_GRADLE="app/build.gradle"
+LIB_GRADLE="customtabs/build.gradle"
+README="README.md"
+
+# Increase SDK version (used as versionName in most modules)
+OLD_VERSION=$(get_version_name $LIB_GRADLE)
+NEW_VERSION=$1
+
+if [ "$NEW_VERSION" \< "$OLD_VERSION" -o "$NEW_VERSION" = "$OLD_VERSION" ] ; then
+    die "Error: We are already at version $OLD_VERSION"
+fi
+
+# Replace versionName in gradle files
+#sed -i -e "s|versionName '$OLD_VERSION|versionName '$NEW_VERSION|" $APP_GRADLE
+sed -i -e "s|versionName '$OLD_VERSION|versionName '$NEW_VERSION|" $LIB_GRADLE
+# Replace in README.md
+sed -i -e "s|saschpe.android:pls-parser:$OLD_VERSION|saschpe.android:pls-parser:$NEW_VERSION|" $README
+
+## Take version code from app gradle
+#OLD_VERSION_CODE=$(get_version_code $APP_GRADLE)
+#NEW_VERSION_CODE=$(($OLD_VERSION_CODE+1))
+## Bump version code for Google's Play Store
+#sed -i -e "s/versionCode $OLD_VERSION_CODE/versionCode $NEW_VERSION_CODE/" $APP_GRADLE
+
+# Create a commit with appropriate git tag
+git commit \
+    $LIB_GRADLE \
+    $README \
+    -m "Bump to version $NEW_VERSION"
+#   $APP_GRADLE \
+# -m "Bump to version $NEW_VERSION (examples version code $NEW_VERSION_CODE)"
+git tag release/$NEW_VERSION

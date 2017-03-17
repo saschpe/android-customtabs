@@ -1,0 +1,21 @@
+# Gradle
+.gradle/
+build/
+local.properties
+
+# IntelliJ / Android Studio
+*.iml
+.idea/
+
+# Eclipse
+.classpath
+.project
+
+# Windows
+Thumbs.db
+
+# Mac OS X
+.DS_Store
+
+# Maven deployer
+pom.xml

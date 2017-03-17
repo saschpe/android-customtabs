@@ -1,0 +1,34 @@
+language: android
+jdk: oraclejdk8
+sudo: false
+android:
+  components:
+    - platform-tools
+    - tools
+    - build-tools-25.0.2
+    - android-25
+    - extra-android-m2repository
+    - extra-google-m2repository 
+  licenses:
+    - android-sdk-license-.+
+env:
+  global:
+    - secure: "sH3nvB01OfdbX/53CiPKGSwHYcjIcRfOPHDVslexcaRWc58hPPwOiFC7NSbdeqX78pl4jtUnK56QVwJgkg01neSPNcBtEkOcUa7TBDBMO7+G9woyRSLdA6knIDbFBRk01WD7Zq6YiyWb7Uar/i0+cPx68PJa926Gd7hd2V3Ab322Kf0vRRMDg4wVY6mml6U1wL4p51Ikl/9BHx/y8BdCam7eL5/HDEkt+QuQGP4q/R+ff9EG07sjLRx/RnyzaBGR7bra81XdY0HRR9irK2Np1C2NHJVOIRoVsV/DcBnjLCg0fAxq3rUyhcmgvp0fvy9nr4Xan4mz8CXGEp8vHVIYkLlD3EhZykjmnxiuYpoY7Ufu/2RwvbTRkzycjLrugOBVPweDo2Gx4Dcc6tzRMggG0whQPIhJ154JRWTRkOOWQtwFsOQKr1pjprmoJioTLKiuRcJQMnGMxrhNPNZJIEmU7PSj/yHbRelP1F4jgacQicNPRo5o+BhC0ef9UBwQFbV4KIEBuYofGFOhSQDWLcjzpzukKSD39Reqw4l27Mp1pZLcZ6NOXyCH9XsjzAp5AUep6Cz7kCiaWQJjEaCy00b+qSyf31v9dOax7+Fu3H2XUwMrrfUKVaqN1aUSqG/jyb/W2S6eMtwKYFC035PPu+1MCF5xI90ymiIPUTMZgoG3uUQ="
+    - secure: "aMZOsvEWsI0Ga8Z40w3xRe56KBE2qanFvpqQRxmmz9IWHoDemodlVcsj6qenNas96L1SpD2RDhrw9soywtT1/VEBo78geJeSNiYhXKnuNVOF19tMa9XHA/8AyBQEA//uv1SljsNqeSTQyDPSZaH2EF6AQcm0Khw1f4wYEyQn7EOr6L11eHPAelov5ISXJYvx8uTz3hDPnuASs8s4+G0uAOqYJKIvlpb640BxF20zwEgv3IeORlxGgqooVsR5CJeGIKpKCIc8V81NzskWLSxYLkBU+aajnrdF0o72nEMuaK3gyCJG37r4BPgpeHZfu/+I4YuLHiNCjvSm9r61XapPJJUq/HUzAgbM4l8KyFXz408aiNCyoIU+gV0ZciewSxAW9nyhuu1lYdWC9ViiNzalAVmVj0r+x1/nF+xaA6lFVgzY1AfQkp3OckNIGIItD8k4yPH1nzJDDNrL3mXLH6hGSHI0GB/lPfiw3hymGHjMkGLcYPgAXtroUgxAOvv1qAFS4DEFpvJvIHMNFTzKfz1DY1JQ2/IYHhesAsSXoOiDn8tRlYSxad3GY3tNjQL7T4pI2n20kZA0ykH6t2asAn8JSGjPtDIWMQxD1Q9Z3kM3jo4B/PhAHV4cebj4DTBZAgwOwL5DEPJ9gh0Zh/SWWp8z/z6YvS6y6LYf+hDTHD84Zxg="
+branches:
+  except:
+    - gh-pages
+notifications:
+  email: false
+before_cache:
+  - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+  - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+cache:
+  directories:
+    - $HOME/.gradle/caches/
+    - $HOME/.gradle/wrapper/
+    - $HOME/.android/build-cache
+script:
+    - echo "Travis branch is $TRAVIS_BRANCH"
+    - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
+    - ./gradlew check
