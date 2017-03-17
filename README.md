@@ -104,7 +104,7 @@ public final class SettingsActivity extends AppCompatPreferenceActivity {
 
 # Download
 ```groovy
-compile 'saschpe.android:customtabs-helper:1.0.6'
+compile 'saschpe.android:customtabs:1.0.0'
 ```
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].

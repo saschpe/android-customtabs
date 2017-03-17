@@ -26,7 +26,7 @@ fi
 #sed -i -e "s|versionName '$OLD_VERSION|versionName '$NEW_VERSION|" $APP_GRADLE
 sed -i -e "s|versionName '$OLD_VERSION|versionName '$NEW_VERSION|" $LIB_GRADLE
 # Replace in README.md
-sed -i -e "s|saschpe.android:pls-parser:$OLD_VERSION|saschpe.android:pls-parser:$NEW_VERSION|" $README
+sed -i -e "s|saschpe.android:customtabs:$OLD_VERSION|saschpe.android:customtabs:$NEW_VERSION|" $README
 
 ## Take version code from app gradle
 #OLD_VERSION_CODE=$(get_version_code $APP_GRADLE)
