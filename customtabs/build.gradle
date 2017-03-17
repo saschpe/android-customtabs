@@ -64,7 +64,7 @@ version = android.defaultConfig.versionName
 ext {
     siteUrl = 'https://github.com/saschpe/android-customtabs'
     gitUrl = 'https://github.com/saschpe/android-customtabs.git'
-    descr = 'My often used Android classes.'
+    descr = 'Chrome CustomTabs for Android simplified.'
 }
 
 apply plugin: 'com.jfrog.bintray'
