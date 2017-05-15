@@ -10,7 +10,7 @@ TODO
 
 # Download
 ```groovy
-compile 'saschpe.android:customtabs:1.0.2'
+compile 'saschpe.android:customtabs:1.0.3'
 ```
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
