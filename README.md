@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/saschpe/android-customtabs.svg?branch=master)](https://travis-ci.org/saschpe/android-customtabs)
 <a href="http://www.methodscount.com/?lib=saschpe.android%3Acustomtabs%3A1.0.2"><img src="https://img.shields.io/badge/Methods and size-core: 100 | deps: 19640 | 25 KB-e91e63.svg"/></a>
 
-Chrome CustomTabs for Android simplified.
+Chrome CustomTabs for Android simplified. Simplifies development and provides higher level classes including fallback in case Chrome isn't available on device.
 
 # Usage
 TODO
