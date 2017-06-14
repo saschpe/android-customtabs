@@ -4,7 +4,7 @@
 #
 # Semantic Versioning: MAJOR.MINOR.PATCH
 
-. "tools/inc.functions"
+. "scripts/inc.functions"
 
 if [ $# -ne 1 ] ; then
     die "Usage: $0 [VERSION]\n\n\tExample: $0 0.0.1"
