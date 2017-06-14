@@ -9,7 +9,35 @@ Chrome CustomTabs for Android demystified. Simplifies development and provides
 higher level classes including fallback in case Chrome isn't available on device.
 
 # Usage
-TODO
+How to create a new custom tab intent and start it with a keep-alive service
+as well as a fallback to plain old WebView should Chrome not be available on
+the device:
+
+```java
+CustomTabsIntent customTabsIntent = new CustomTabsIntent.Builder()
+        .addDefaultShareMenuItem()
+        .setToolbarColor(this.getResources().getColor(R.color.colorPrimary))
+        .setShowTitle(true)
+        .setCloseButtonIcon(backArrow)
+        .build();
+
+// This is optional but recommended
+CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent);
+
+// This is where the magic happens...
+CustomTabsHelper.openCustomTab(this, customTabsIntent,
+        Uri.parse("https://github.com/saschpe/android-customtabs"),
+        new WebViewFallback());
+```
+
+Preload CustomTabs in your Application.java to warm-up early and reduce start-up
+time:
+
+```java
+// Preload custom tabs service for improved performance
+// This is optional but recommended
+registerActivityLifecycleCallbacks(new CustomTabsActivityLifecycleCallbacks());
+```
 
 ## Screenshots
 <img alt="Screenshot 1" src="assets/device-art/customtabs-1.png" width="256" />
