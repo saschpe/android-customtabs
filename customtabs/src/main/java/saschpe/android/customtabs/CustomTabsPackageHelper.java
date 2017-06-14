@@ -27,6 +27,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -134,7 +135,7 @@ final class CustomTabsPackageHelper {
     /**
      * @return All possible chrome package names that provide custom tabs feature.
      */
-    static String[] getPackages() {
-        return new String[]{"", STABLE_PACKAGE, BETA_PACKAGE, DEV_PACKAGE, LOCAL_PACKAGE};
+    static List<String> getPackages() {
+        return Arrays.asList("", STABLE_PACKAGE, BETA_PACKAGE, DEV_PACKAGE, LOCAL_PACKAGE);
     }
 }
