@@ -17,13 +17,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 26
     buildToolsVersion '26.0.1'
 
     defaultConfig {
         applicationId 'com.example.saschpe.customtabs'
         minSdkVersion 17
-        targetSdkVersion 25
+        targetSdkVersion 26
         versionCode 170100
         versionName '1.0.0'
         archivesBaseName = "${applicationId}-${versionName}"
@@ -38,7 +38,7 @@ android {
 
 dependencies {
     compile project(':customtabs')
-    compile 'com.android.support:appcompat-v7:25.4.0'
+    compile 'com.android.support:appcompat-v7:26.0.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:design:25.4.0'
+    compile 'com.android.support:design:26.0.1'
 }
