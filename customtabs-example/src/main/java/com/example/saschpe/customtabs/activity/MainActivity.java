@@ -44,10 +44,10 @@ public final class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,7 +61,7 @@ public final class MainActivity extends AppCompatActivity {
      * <p>
      * See https://developer.chrome.com/multidevice/android/customtabs
      */
-    public void startGitHubProjectCustomTab() {
+    private void startGitHubProjectCustomTab() {
         // Apply some fancy animation to show off
         CustomTabsIntent customTabsIntent = getDefaultCustomTabsIntentBuilder()
                 .setStartAnimations(this, R.anim.slide_in_right, R.anim.slide_out_left)
@@ -100,7 +100,7 @@ public final class MainActivity extends AppCompatActivity {
      * @param drawableId The drawable ID
      * @return Bitmap equivalent
      */
-    public Bitmap getBitmapFromVectorDrawable(final @DrawableRes int drawableId) {
+    private Bitmap getBitmapFromVectorDrawable(final @DrawableRes int drawableId) {
         Drawable drawable = AppCompatResources.getDrawable(this, drawableId);
         if (drawable == null) {
             return null;

@@ -44,8 +44,8 @@ public final class WebViewFallbackTest {
         doNothing().when(mockContext).startActivity(any(Intent.class));
 
         WebViewFallback webViewFallback = new WebViewFallback();
-        Intent expectedIntent = new Intent(mockContext, WebViewActivity.class)
-                .putExtra(WebViewActivity.EXTRA_URL, GITHUB_PAGE);
+        /*Intent expectedIntent = new Intent(mockContext, WebViewActivity.class)
+                .putExtra(WebViewActivity.EXTRA_URL, GITHUB_PAGE);*/
 
         // Act
         webViewFallback.openUri(mockContext, Uri.parse(GITHUB_PAGE));

@@ -54,7 +54,7 @@ public final class WebViewActivity extends AppCompatActivity {
             }
         }
 
-        WebView webView = (WebView) findViewById(R.id.web_view);
+        WebView webView = findViewById(R.id.web_view);
         webView.loadUrl(url);
 
         // No title provided. Use the website's once it's loaded...
