@@ -27,7 +27,7 @@ import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatDrawableManager;
+import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -101,7 +101,10 @@ public final class MainActivity extends AppCompatActivity {
      * @return Bitmap equivalent
      */
     public Bitmap getBitmapFromVectorDrawable(final @DrawableRes int drawableId) {
-        Drawable drawable = AppCompatDrawableManager.get().getDrawable(this, drawableId);
+        Drawable drawable = AppCompatResources.getDrawable(this, drawableId);
+        if (drawable == null) {
+            return null;
+        }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             drawable = (DrawableCompat.wrap(drawable)).mutate();
         }

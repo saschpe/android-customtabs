@@ -17,7 +17,6 @@
 <resources>
 
     <string name="app_name">CustomTabs Example</string>
-    <string name="action_settings">Settings</string>
     <string name="press_the_fab">Press the floating action button to experience the power of CustomTabs!</string>
 
 </resources>
