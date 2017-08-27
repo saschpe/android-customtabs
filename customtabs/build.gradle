@@ -53,13 +53,13 @@ android {
 
 dependencies {
     // Runtime dependencies
-    compile 'com.android.support:appcompat-v7:26.0.1'
-    compile 'com.android.support:customtabs:26.0.1'
+    implementation 'com.android.support:appcompat-v7:26.0.1'
+    implementation 'com.android.support:customtabs:26.0.1'
 
     // Test dependencies
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.robolectric:robolectric:3.4.2'
-    testCompile 'org.mockito:mockito-core:2.8.47'
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.robolectric:robolectric:3.4.2'
+    testImplementation 'org.mockito:mockito-core:2.8.47'
 }
 
 group = 'saschpe.android'
