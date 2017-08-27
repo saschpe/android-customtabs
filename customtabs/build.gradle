@@ -35,10 +35,6 @@ android {
         versionName '1.0.6'
     }
 
-    lintOptions {
-        abortOnError false
-    }
-
     buildTypes {
         debug {
             consumerProguardFiles 'proguard-rules.pro'
