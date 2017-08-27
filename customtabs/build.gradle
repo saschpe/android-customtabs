@@ -49,8 +49,8 @@ android {
 
 dependencies {
     // Runtime dependencies
-    implementation 'com.android.support:appcompat-v7:26.0.1'
-    implementation 'com.android.support:customtabs:26.0.1'
+    compile 'com.android.support:appcompat-v7:26.0.1'
+    compile 'com.android.support:customtabs:26.0.1'
 
     // Test dependencies
     testImplementation 'junit:junit:4.12'
