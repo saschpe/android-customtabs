@@ -24,7 +24,7 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class WebViewActivity extends AppCompatActivity {
+public final class WebViewActivity extends AppCompatActivity {
     /**
      * Optional title resource for the actionbar / toolbar.
      */
