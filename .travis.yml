@@ -19,7 +19,11 @@ branches:
   except:
     - gh-pages
 notifications:
-  email: false
+  email:
+    recipients:
+      - sascha@peilicke.de
+    on_success: never # default: change
+    on_failure: always # default: always
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
