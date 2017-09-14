@@ -17,6 +17,10 @@ function safe {
     return $status
 }
 
+function version_gt() {
+    test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
+}
+
 function get_version_name {
     echo $(grep -e "versionName '" $1 | cut -d"'" -f2)
 }

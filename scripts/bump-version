@@ -4,7 +4,7 @@
 #
 # Semantic Versioning: MAJOR.MINOR.PATCH
 
-. "scripts/inc.functions"
+. "scripts/inc.functions.sh"
 
 if [ $# -ne 1 ] ; then
     die "Usage: $0 [VERSION]\n\n\tExample: $0 0.0.1"
@@ -17,8 +17,7 @@ README="README.md"
 # Increase SDK version (used as versionName in most modules)
 OLD_VERSION=$(get_version_name $LIB_GRADLE)
 NEW_VERSION=$1
-
-if [ "$NEW_VERSION" \< "$OLD_VERSION" -o "$NEW_VERSION" = "$OLD_VERSION" ] ; then
+if version_gt $OLD_VERSION_NAME $NEW_VERSION_NAME; then
     die "Error: We are already at version $OLD_VERSION"
 fi
 
