@@ -21,10 +21,9 @@ buildscript {
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-beta3'
+        classpath 'com.android.tools.build:gradle:3.0.0-beta5'
     }
 }
-
 
 allprojects {
     repositories {
