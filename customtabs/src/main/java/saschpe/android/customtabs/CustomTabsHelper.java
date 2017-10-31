@@ -47,14 +47,14 @@ public final class CustomTabsHelper {
      * @param uri              the Uri to be opened
      * @param fallback         a CustomTabFallback to be used if Custom Tabs is not available
      */
-    public static void openCustomTab(Context context,
-                                     CustomTabsIntent customTabsIntent,
-                                     Uri uri,
-                                     CustomTabFallback fallback) {
+    public static void openCustomTab(final Context context,
+                                     final CustomTabsIntent customTabsIntent,
+                                     final Uri uri,
+                                     final CustomTabFallback fallback) {
         String packageName = CustomTabsPackageHelper.getPackageNameToUse(context);
 
         //If we cant find a package name, it means there's no browser that supports
-        //Chrome Custom Tabs installed. So, we fallback to the webview
+        //Chrome Custom Tabs installed. So, we fallback to the web-view
         if (packageName == null) {
             if (fallback != null) {
                 fallback.openUri(context, uri);
@@ -71,7 +71,7 @@ public final class CustomTabsHelper {
         }
     }
 
-    public static void addKeepAliveExtra(Context context, Intent intent) {
+    public static void addKeepAliveExtra(final Context context, final Intent intent) {
         Intent keepAliveIntent = new Intent().setClassName(
                 context.getPackageName(),
                 KeepAliveService.class.getCanonicalName());
@@ -83,8 +83,10 @@ public final class CustomTabsHelper {
      *
      * @param activity the activity that is connected to the service
      */
-    public void unbindCustomTabsService(Activity activity) {
-        if (connection == null) return;
+    public void unbindCustomTabsService(final Activity activity) {
+        if (connection == null) {
+            return;
+        }
         activity.unbindService(connection);
         client = null;
         customTabsSession = null;
@@ -107,27 +109,32 @@ public final class CustomTabsHelper {
     /**
      * Register a Callback to be called when connected or disconnected from the Custom Tabs Service
      */
-    public void setConnectionCallback(ConnectionCallback connectionCallback) {
+    public void setConnectionCallback(final ConnectionCallback connectionCallback) {
         this.connectionCallback = connectionCallback;
     }
 
     /**
      * Binds the Activity to the Custom Tabs Service
      *
-     * @param activity the activity to be binded to the service
+     * @param activity the activity to be bound to the service
      */
-    public void bindCustomTabsService(Activity activity) {
-        if (client != null) return;
+    public void bindCustomTabsService(final Activity activity) {
+        if (client != null) {
+            return;
+        }
 
         String packageName = CustomTabsPackageHelper.getPackageNameToUse(activity);
-        if (packageName == null) return;
+        if (packageName == null) {
+            return;
+        }
         connection = new CustomTabsServiceConnection() {
             @Override
             public void onCustomTabsServiceConnected(ComponentName name, CustomTabsClient client) {
                 CustomTabsHelper.this.client = client;
                 CustomTabsHelper.this.client.warmup(0L);
-                if (connectionCallback != null)
+                if (connectionCallback != null) {
                     connectionCallback.onCustomTabsConnected();
+                }
                 //Initialize a session as soon as possible.
                 getSession();
             }
@@ -135,20 +142,20 @@ public final class CustomTabsHelper {
             @Override
             public void onServiceDisconnected(ComponentName name) {
                 client = null;
-                if (connectionCallback != null)
+                if (connectionCallback != null) {
                     connectionCallback.onCustomTabsDisconnected();
+                }
             }
         };
         CustomTabsClient.bindCustomTabsService(activity, packageName, connection);
     }
 
-    public boolean mayLaunchUrl(Uri uri, Bundle extras, List<Bundle> otherLikelyBundles) {
-        if (client == null) return false;
-
+    public boolean mayLaunchUrl(final Uri uri, final Bundle extras, final List<Bundle> otherLikelyBundles) {
+        if (client == null) {
+            return false;
+        }
         CustomTabsSession session = getSession();
-        if (session == null) return false;
-
-        return session.mayLaunchUrl(uri, extras, otherLikelyBundles);
+        return session != null && session.mayLaunchUrl(uri, extras, otherLikelyBundles);
     }
 
     /**
