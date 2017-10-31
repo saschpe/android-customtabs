@@ -146,6 +146,14 @@ public final class CustomTabsHelper {
                     connectionCallback.onCustomTabsDisconnected();
                 }
             }
+
+            @Override
+            public void onBindingDied(ComponentName name) {
+                client = null;
+                if (connectionCallback != null) {
+                    connectionCallback.onCustomTabsDisconnected();
+                }
+            }
         };
         CustomTabsClient.bindCustomTabsService(activity, packageName, connection);
     }
