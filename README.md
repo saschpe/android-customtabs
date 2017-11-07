@@ -3,7 +3,7 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android%20CustomTabs-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/5872)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 [![Build Status](https://travis-ci.org/saschpe/android-customtabs.svg?branch=master)](https://travis-ci.org/saschpe/android-customtabs)
-<a href="http://www.methodscount.com/?lib=saschpe.android%3Acustomtabs%3A1.0.8"><img src="https://img.shields.io/badge/Methods and size-core: 100 | deps: 19640 | 25 KB-e91e63.svg"/></a>
+<a href="http://www.methodscount.com/?lib=saschpe.android%3Acustomtabs%3A1.0.9"><img src="https://img.shields.io/badge/Methods and size-core: 100 | deps: 19640 | 25 KB-e91e63.svg"/></a>
 
 Chrome CustomTabs for Android demystified. Simplifies development and provides
 higher level classes including fallback in case Chrome isn't available on device.
@@ -46,7 +46,7 @@ registerActivityLifecycleCallbacks(new CustomTabsActivityLifecycleCallbacks());
 
 # Download
 ```groovy
-compile 'saschpe.android:customtabs:1.0.8'
+compile 'saschpe.android:customtabs:1.0.9'
 ```
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
