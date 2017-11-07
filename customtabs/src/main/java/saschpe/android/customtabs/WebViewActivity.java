@@ -16,6 +16,7 @@
 
 package saschpe.android.customtabs;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
@@ -35,6 +36,7 @@ public final class WebViewActivity extends AppCompatActivity {
      */
     public static final String EXTRA_URL = WebViewActivity.class.getName() + ".EXTRA_URL";
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +58,7 @@ public final class WebViewActivity extends AppCompatActivity {
 
         WebView webView = findViewById(R.id.web_view);
         webView.loadUrl(url);
+        webView.getSettings().setJavaScriptEnabled(true);
 
         // No title provided. Use the website's once it's loaded...
         if (title == null) {
