@@ -17,6 +17,7 @@
 package saschpe.android.customtabs;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -56,6 +57,11 @@ public final class WebViewActivity extends AppCompatActivity {
      */
     public static final String EXTRA_CLOSE_BUTTON_TINT_COLOR = WebViewActivity.class.getName() + ".EXTRA_CLOSE_BUTTON_TINT_COLOR";
 
+    /**
+     * Optional toolbar background color
+     */
+    public static final String EXTRA_TOOLBAR_COLOR = WebViewActivity.class.getName() + ".EXTRA_TOOLBAR_COLOR";
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +70,7 @@ public final class WebViewActivity extends AppCompatActivity {
         String title = getIntent().getStringExtra(EXTRA_TITLE);
         String url = getIntent().getStringExtra(EXTRA_URL);
         int theme = getIntent().getIntExtra(EXTRA_ACTIVITY_THEME, UNDEFINED_RESOURCE);
+        int toolbarColor = getIntent().getIntExtra(EXTRA_TOOLBAR_COLOR, UNDEFINED_RESOURCE);
         int closeButtonIcon = getIntent().getIntExtra(EXTRA_CLOSE_BUTTON_ICON, UNDEFINED_RESOURCE);
         int closeButtonTintColor = getIntent().getIntExtra(EXTRA_CLOSE_BUTTON_TINT_COLOR, UNDEFINED_RESOURCE);
 
@@ -75,9 +82,15 @@ public final class WebViewActivity extends AppCompatActivity {
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+
             if (closeButtonIcon != UNDEFINED_RESOURCE || closeButtonTintColor != UNDEFINED_RESOURCE) {
                 actionBar.setHomeAsUpIndicator(buildUpNavigationDrawable(closeButtonIcon, closeButtonTintColor));
             }
+
+            if (toolbarColor != UNDEFINED_RESOURCE) {
+                actionBar.setBackgroundDrawable(new ColorDrawable(toolbarColor));
+            }
+
             if (title != null) {
                 actionBar.setTitle(title);
                 actionBar.setSubtitle(url);

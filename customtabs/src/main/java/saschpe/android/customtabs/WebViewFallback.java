@@ -30,6 +30,7 @@ import android.support.annotation.StyleRes;
 public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback {
 
     private int theme;
+    private int toolbarColor;
     private int closeButtonIcon;
     private int closeButtonTintColor;
 
@@ -42,6 +43,7 @@ public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback
         Intent intent = new Intent(context, WebViewActivity.class);
         intent.putExtra(WebViewActivity.EXTRA_URL, uri.toString());
         intent.putExtra(WebViewActivity.EXTRA_ACTIVITY_THEME, theme);
+        intent.putExtra(WebViewActivity.EXTRA_TOOLBAR_COLOR, toolbarColor);
         intent.putExtra(WebViewActivity.EXTRA_CLOSE_BUTTON_ICON, closeButtonIcon);
         intent.putExtra(WebViewActivity.EXTRA_CLOSE_BUTTON_TINT_COLOR, closeButtonTintColor);
         context.startActivity(intent);
@@ -49,6 +51,11 @@ public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback
 
     public WebViewFallback setTheme(@StyleRes int theme) {
         this.theme = theme;
+        return this;
+    }
+
+    public WebViewFallback setToolbarColor(@ColorInt int toolbarColor) {
+        this.toolbarColor = toolbarColor;
         return this;
     }
 
