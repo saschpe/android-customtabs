@@ -20,17 +20,33 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.StyleRes;
 import android.support.customtabs.CustomTabsClient;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.customtabs.CustomTabsServiceConnection;
 import android.support.customtabs.CustomTabsSession;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.content.res.AppCompatResources;
 
 import java.util.List;
 
+/**
+ * A helper wrapper help to opens the URL on a Custom Tab if possible. Otherwise fallsback to
+ * opening it on a WebView
+ */
+
 public final class CustomTabsHelper {
+
+    public static int UNDEFINED_RESOURCE = 0;
+
     private static final String EXTRA_CUSTOM_TABS_KEEP_ALIVE =
             "android.support.customtabs.extra.KEEP_ALIVE";
 
@@ -39,43 +55,111 @@ public final class CustomTabsHelper {
     private CustomTabsServiceConnection connection;
     private ConnectionCallback connectionCallback;
 
-    /**
-     * Opens the URL on a Custom Tab if possible. Otherwise fallsback to opening it on a WebView
-     *
-     * @param context         The host activity
-     * @param customTabsIntent a CustomTabsIntent to be used if Custom Tabs is available
-     * @param uri              the Uri to be opened
-     * @param fallback         a CustomTabFallback to be used if Custom Tabs is not available
-     */
-    public static void openCustomTab(final Context context,
-                                     final CustomTabsIntent customTabsIntent,
-                                     final Uri uri,
-                                     final CustomTabFallback fallback) {
-        String packageName = CustomTabsPackageHelper.getPackageNameToUse(context);
+    public static class Builder {
 
-        //If we cant find a package name, it means there's no browser that supports
-        //Chrome Custom Tabs installed. So, we fallback to the web-view
-        if (packageName == null) {
-            if (fallback != null) {
-                fallback.openUri(context, uri);
-            }
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                customTabsIntent.intent
-                        .putExtra(Intent.EXTRA_REFERRER,
-                                Uri.parse(Intent.URI_ANDROID_APP_SCHEME + "//" + context.getPackageName()));
-            }
+        private final Context context;
+        private final Uri uri;
+        private int theme;
+        private int toolbarColor;
+        private int closeButtonIcon;
+        private int closeButtonTintColor;
+        private boolean addKeepAliveExtra;
 
-            customTabsIntent.intent.setPackage(packageName);
-            customTabsIntent.launchUrl(context, uri);
+        private CustomTabsIntent.Builder customTabsIntentBuilder;
+
+        /**
+         * @param context The host activity
+         * @param uri     the Uri to be opened
+         */
+        public Builder(Context context, Uri uri) {
+            this.context = context;
+            this.uri = uri;
         }
-    }
 
-    public static void addKeepAliveExtra(final Context context, final Intent intent) {
-        Intent keepAliveIntent = new Intent().setClassName(
-                context.getPackageName(),
-                KeepAliveService.class.getCanonicalName());
-        intent.putExtra(EXTRA_CUSTOM_TABS_KEEP_ALIVE, keepAliveIntent);
+        public Builder setTheme(@StyleRes int theme) {
+            this.theme = theme;
+            return this;
+        }
+
+        public Builder setToolbarColor(@ColorInt int toolbarColor) {
+            this.toolbarColor = toolbarColor;
+            return this;
+        }
+
+        public Builder setCloseButtonIcon(@DrawableRes int closeButtonIcon) {
+            this.closeButtonIcon = closeButtonIcon;
+            return this;
+        }
+
+        public Builder setCloseButtonTintColor(@ColorInt int closeButtonTintColor) {
+            this.closeButtonTintColor = closeButtonTintColor;
+            return this;
+        }
+
+        public Builder setAddKeepAliveExtra(boolean addKeepAliveExtra) {
+            this.addKeepAliveExtra = addKeepAliveExtra;
+            return this;
+        }
+
+        /**
+         * Apply some sane defaults across a single app.
+         * <b>
+         * Not strictly necessary but simplifies code when having many different
+         * custom tab intents in one app.
+         *
+         * @return {@link CustomTabsIntent.Builder}
+         */
+        public CustomTabsIntent.Builder getCustomTabsIntentBuilder() {
+            if (customTabsIntentBuilder == null) {
+                customTabsIntentBuilder = new CustomTabsIntent.Builder();
+            }
+
+            customTabsIntentBuilder
+                    .addDefaultShareMenuItem()
+                    .setToolbarColor(toolbarColor)
+                    .setShowTitle(true);
+            Bitmap backArrow = getBitmapFromVectorDrawable(context, closeButtonIcon, closeButtonTintColor);
+            if (backArrow != null) {
+                customTabsIntentBuilder.setCloseButtonIcon(backArrow);
+            }
+
+            return customTabsIntentBuilder;
+        }
+
+        public void open() {
+            String packageName = CustomTabsPackageHelper.getPackageNameToUse(context);
+
+            //If we cant find a package name, it means there's no browser that supports
+            //Chrome Custom Tabs installed. So, we fallback to the web-view
+            if (packageName == null) {
+                // build WebView activity fallback
+                WebViewFallback webViewFallback = new WebViewFallback()
+                        .setTheme(theme)
+                        .setUpDrawable(closeButtonIcon)
+                        .setUpTintColor(closeButtonTintColor);
+
+                webViewFallback.openUri(context, uri);
+            } else {
+                // build CustomTabsIntent
+                CustomTabsIntent customTabsIntent = getCustomTabsIntentBuilder().build();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    customTabsIntent.intent
+                            .putExtra(Intent.EXTRA_REFERRER,
+                                    Uri.parse(Intent.URI_ANDROID_APP_SCHEME + "//" + context.getPackageName()));
+                }
+
+                if (addKeepAliveExtra) {
+                    Intent keepAliveIntent = new Intent().setClassName(
+                            context.getPackageName(),
+                            KeepAliveService.class.getCanonicalName());
+                    customTabsIntent.intent.putExtra(EXTRA_CUSTOM_TABS_KEEP_ALIVE, keepAliveIntent);
+                }
+
+                customTabsIntent.intent.setPackage(packageName);
+                customTabsIntent.launchUrl(context, uri);
+            }
+        }
     }
 
     /**
@@ -187,9 +271,38 @@ public final class CustomTabsHelper {
      */
     public interface CustomTabFallback {
         /**
-         * @param context  The Activity that wants to open the Uri
-         * @param uri      The uri to be opened by the fallback
+         * @param context The Activity that wants to open the Uri
+         * @param uri     The uri to be opened by the fallback
          */
         void openUri(Context context, Uri uri);
+    }
+
+    /**
+     * Converts a vector asset to a bitmap as required by {@link CustomTabsIntent.Builder#setCloseButtonIcon(Bitmap)}
+     *
+     * @param context    context
+     * @param drawableId The drawable ID
+     * @param tintColor  The drawable tint color
+     * @return Bitmap equivalent
+     */
+    private static Bitmap getBitmapFromVectorDrawable(Context context, final @DrawableRes int drawableId, final @ColorInt int tintColor) {
+        Drawable drawable = AppCompatResources.getDrawable(context, drawableId);
+        if (drawable == null) {
+            return null;
+        }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            drawable = (DrawableCompat.wrap(drawable)).mutate();
+        }
+        if (tintColor != UNDEFINED_RESOURCE) {
+            DrawableCompat.setTint(drawable, tintColor);
+        }
+
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
+                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
     }
 }
