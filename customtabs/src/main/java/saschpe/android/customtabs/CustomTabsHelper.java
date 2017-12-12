@@ -21,8 +21,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,10 +30,10 @@ import android.support.customtabs.CustomTabsClient;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.customtabs.CustomTabsServiceConnection;
 import android.support.customtabs.CustomTabsSession;
-import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.content.res.AppCompatResources;
 
 import java.util.List;
+
+import saschpe.android.customtabs.utils.Utils;
 
 /**
  * A helper wrapper help to opens the URL on a Custom Tab if possible. Otherwise fallsback to
@@ -123,7 +121,8 @@ public final class CustomTabsHelper {
                     .addDefaultShareMenuItem()
                     .setToolbarColor(toolbarColor)
                     .setShowTitle(true);
-            Bitmap backArrow = getBitmapFromVectorDrawable(context, closeButtonIcon, toolbarItemColor);
+
+            Bitmap backArrow = Utils.getBitmapFromVectorDrawable(context, closeButtonIcon, toolbarItemColor);
             if (backArrow != null) {
                 customTabsIntentBuilder.setCloseButtonIcon(backArrow);
             }
@@ -290,34 +289,5 @@ public final class CustomTabsHelper {
          * @param uri     The uri to be opened by the fallback
          */
         void openUri(Context context, Uri uri);
-    }
-
-    /**
-     * Converts a vector asset to a bitmap as required by {@link CustomTabsIntent.Builder#setCloseButtonIcon(Bitmap)}
-     *
-     * @param context    context
-     * @param drawableId The drawable ID
-     * @param tintColor  The drawable tint color
-     * @return Bitmap equivalent
-     */
-    private static Bitmap getBitmapFromVectorDrawable(Context context, final @DrawableRes int drawableId, final @ColorInt int tintColor) {
-        Drawable drawable = AppCompatResources.getDrawable(context, drawableId);
-        if (drawable == null) {
-            return null;
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = (DrawableCompat.wrap(drawable)).mutate();
-        }
-        if (tintColor != UNDEFINED_RESOURCE) {
-            DrawableCompat.setTint(drawable, tintColor);
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
     }
 }

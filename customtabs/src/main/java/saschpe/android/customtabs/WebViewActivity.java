@@ -18,11 +18,9 @@ package saschpe.android.customtabs;
 
 import android.annotation.SuppressLint;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Spannable;
@@ -31,6 +29,8 @@ import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import saschpe.android.customtabs.utils.Utils;
 
 import static saschpe.android.customtabs.CustomTabsHelper.UNDEFINED_RESOURCE;
 
@@ -84,7 +84,9 @@ public final class WebViewActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
 
             if (closeButtonIcon != UNDEFINED_RESOURCE || toolbarItemColor != UNDEFINED_RESOURCE) {
-                actionBar.setHomeAsUpIndicator(buildUpNavigationDrawable(closeButtonIcon, toolbarItemColor));
+                actionBar.setHomeAsUpIndicator(Utils.getDrawable(this,
+                        closeButtonIcon == UNDEFINED_RESOURCE ? R.drawable.abc_ic_ab_back_material : closeButtonIcon,
+                        toolbarItemColor));
             }
 
             if (toolbarColor != UNDEFINED_RESOURCE) {
@@ -137,20 +139,5 @@ public final class WebViewActivity extends AppCompatActivity {
             text.setSpan(new ForegroundColorSpan(textColor), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         }
         return text;
-    }
-
-    private Drawable buildUpNavigationDrawable(int drawable, int tintColor) {
-        Drawable arrowDrawable = getResources().getDrawable(drawable != UNDEFINED_RESOURCE ? drawable : R.drawable.abc_ic_ab_back_material);
-        Drawable wrapped = DrawableCompat.wrap(arrowDrawable);
-
-        if (arrowDrawable != null && wrapped != null) {
-            // This should avoid tinting all the arrows
-            arrowDrawable.mutate();
-            if (tintColor != UNDEFINED_RESOURCE) {
-                DrawableCompat.setTint(wrapped, tintColor);
-            }
-        }
-
-        return wrapped;
     }
 }
