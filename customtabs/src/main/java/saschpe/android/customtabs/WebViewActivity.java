@@ -24,6 +24,9 @@ import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -53,9 +56,9 @@ public final class WebViewActivity extends AppCompatActivity {
     public static final String EXTRA_CLOSE_BUTTON_ICON = WebViewActivity.class.getName() + ".EXTRA_CLOSE_BUTTON_ICON";
 
     /**
-     * Optional close button (up navigation) tint color
+     * Optional close button (up navigation) tint color and title text color
      */
-    public static final String EXTRA_CLOSE_BUTTON_TINT_COLOR = WebViewActivity.class.getName() + ".EXTRA_CLOSE_BUTTON_TINT_COLOR";
+    public static final String EXTRA_TOOLBAR_ITEM_COLOR = WebViewActivity.class.getName() + ".EXTRA_TOOLBAR_ITEM_COLOR";
 
     /**
      * Optional toolbar background color
@@ -72,7 +75,7 @@ public final class WebViewActivity extends AppCompatActivity {
         int theme = getIntent().getIntExtra(EXTRA_ACTIVITY_THEME, UNDEFINED_RESOURCE);
         int toolbarColor = getIntent().getIntExtra(EXTRA_TOOLBAR_COLOR, UNDEFINED_RESOURCE);
         int closeButtonIcon = getIntent().getIntExtra(EXTRA_CLOSE_BUTTON_ICON, UNDEFINED_RESOURCE);
-        int closeButtonTintColor = getIntent().getIntExtra(EXTRA_CLOSE_BUTTON_TINT_COLOR, UNDEFINED_RESOURCE);
+        final int toolbarItemColor = getIntent().getIntExtra(EXTRA_TOOLBAR_ITEM_COLOR, UNDEFINED_RESOURCE);
 
         if (theme != UNDEFINED_RESOURCE) {
             setTheme(theme);
@@ -83,8 +86,8 @@ public final class WebViewActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
 
-            if (closeButtonIcon != UNDEFINED_RESOURCE || closeButtonTintColor != UNDEFINED_RESOURCE) {
-                actionBar.setHomeAsUpIndicator(buildUpNavigationDrawable(closeButtonIcon, closeButtonTintColor));
+            if (closeButtonIcon != UNDEFINED_RESOURCE || toolbarItemColor != UNDEFINED_RESOURCE) {
+                actionBar.setHomeAsUpIndicator(buildUpNavigationDrawable(closeButtonIcon, toolbarItemColor));
             }
 
             if (toolbarColor != UNDEFINED_RESOURCE) {
@@ -92,10 +95,10 @@ public final class WebViewActivity extends AppCompatActivity {
             }
 
             if (title != null) {
-                actionBar.setTitle(title);
-                actionBar.setSubtitle(url);
+                actionBar.setTitle(buildTitleSpannable(title, toolbarItemColor));
+                actionBar.setSubtitle(buildTitleSpannable(url, toolbarItemColor));
             } else {
-                actionBar.setTitle(url);
+                actionBar.setTitle(buildTitleSpannable(url, toolbarItemColor));
             }
         }
 
@@ -110,8 +113,8 @@ public final class WebViewActivity extends AppCompatActivity {
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
                     if (actionBar != null) {
-                        actionBar.setTitle(view.getTitle());
-                        actionBar.setSubtitle(url);
+                        actionBar.setTitle(buildTitleSpannable(view.getTitle(), toolbarItemColor));
+                        actionBar.setSubtitle(buildTitleSpannable(url, toolbarItemColor));
                     }
                 }
             });
@@ -126,6 +129,14 @@ public final class WebViewActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private Spannable buildTitleSpannable(String s, int textColor) {
+        Spannable text = new SpannableString(s);
+        if (textColor != UNDEFINED_RESOURCE) {
+            text.setSpan(new ForegroundColorSpan(textColor), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        }
+        return text;
     }
 
     private Drawable buildUpNavigationDrawable(int drawable, int tintColor) {

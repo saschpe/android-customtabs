@@ -62,7 +62,7 @@ public final class CustomTabsHelper {
         private int theme;
         private int toolbarColor;
         private int closeButtonIcon;
-        private int closeButtonTintColor;
+        private int toolbarItemColor;
         private boolean openWebViewFallback = true;
         private boolean addKeepAliveExtra;
 
@@ -92,8 +92,8 @@ public final class CustomTabsHelper {
             return this;
         }
 
-        public Builder setCloseButtonTintColor(@ColorInt int closeButtonTintColor) {
-            this.closeButtonTintColor = closeButtonTintColor;
+        public Builder setToolbarItemColor(@ColorInt int toolbarItemColor) {
+            this.toolbarItemColor = toolbarItemColor;
             return this;
         }
 
@@ -124,7 +124,7 @@ public final class CustomTabsHelper {
                     .addDefaultShareMenuItem()
                     .setToolbarColor(toolbarColor)
                     .setShowTitle(true);
-            Bitmap backArrow = getBitmapFromVectorDrawable(context, closeButtonIcon, closeButtonTintColor);
+            Bitmap backArrow = getBitmapFromVectorDrawable(context, closeButtonIcon, toolbarItemColor);
             if (backArrow != null) {
                 customTabsIntentBuilder.setCloseButtonIcon(backArrow);
             }
@@ -147,7 +147,7 @@ public final class CustomTabsHelper {
                             .setTheme(theme)
                             .setToolbarColor(toolbarColor)
                             .setCloseButtonIcon(closeButtonIcon)
-                            .setCloseButtonTintColor(closeButtonTintColor);
+                            .setToolbarItemColor(toolbarItemColor);
 
                     webViewFallback.openUri(context, uri);
                     return true;

@@ -32,7 +32,7 @@ public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback
     private int theme;
     private int toolbarColor;
     private int closeButtonIcon;
-    private int closeButtonTintColor;
+    private int toolbarItemColor;
 
     /**
      * @param context The {@link Context} that wants to open the Uri
@@ -45,7 +45,7 @@ public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback
         intent.putExtra(WebViewActivity.EXTRA_ACTIVITY_THEME, theme);
         intent.putExtra(WebViewActivity.EXTRA_TOOLBAR_COLOR, toolbarColor);
         intent.putExtra(WebViewActivity.EXTRA_CLOSE_BUTTON_ICON, closeButtonIcon);
-        intent.putExtra(WebViewActivity.EXTRA_CLOSE_BUTTON_TINT_COLOR, closeButtonTintColor);
+        intent.putExtra(WebViewActivity.EXTRA_TOOLBAR_ITEM_COLOR, toolbarItemColor);
         context.startActivity(intent);
     }
 
@@ -64,8 +64,8 @@ public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback
         return this;
     }
 
-    public WebViewFallback setCloseButtonTintColor(@ColorInt int closeButtonTintColor) {
-        this.closeButtonTintColor = closeButtonTintColor;
+    public WebViewFallback setToolbarItemColor(@ColorInt int toolbarItemColor) {
+        this.toolbarItemColor = toolbarItemColor;
         return this;
     }
 }

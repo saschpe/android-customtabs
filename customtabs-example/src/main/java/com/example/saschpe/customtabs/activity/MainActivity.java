@@ -67,7 +67,7 @@ public final class MainActivity extends AppCompatActivity {
                 .setTheme(customActionBar ? R.style.AppThemeCustom : UNDEFINED_RESOURCE)
                 .setToolbarColor(ContextCompat.getColor(this, customActionBar ? R.color.colorPrimaryCustom : R.color.colorPrimary))
                 .setCloseButtonIcon(R.drawable.ic_arrow_back_white_24dp)
-                .setCloseButtonTintColor(customActionBar ? ContextCompat.getColor(this, R.color.colorTitleTintCustom) : UNDEFINED_RESOURCE)
+                .setToolbarItemColor(customActionBar ? ContextCompat.getColor(this, R.color.colorTitleTintCustom) : UNDEFINED_RESOURCE)
                 .setAddKeepAliveExtra(true);
 
         // Get and apply some fancy animation to show off
