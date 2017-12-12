@@ -22,9 +22,11 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.content.res.AppCompatResources;
@@ -48,10 +50,17 @@ public final class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fabCustom = findViewById(R.id.fab_custom);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startGitHubProjectCustomTab();
+                startGitHubProjectCustomTab(false);
+            }
+        });
+        fabCustom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startGitHubProjectCustomTab(true);
             }
         });
     }
@@ -61,9 +70,9 @@ public final class MainActivity extends AppCompatActivity {
      * <p>
      * See https://developer.chrome.com/multidevice/android/customtabs
      */
-    private void startGitHubProjectCustomTab() {
+    private void startGitHubProjectCustomTab(boolean customActionBar) {
         // Apply some fancy animation to show off
-        CustomTabsIntent customTabsIntent = getDefaultCustomTabsIntentBuilder()
+        CustomTabsIntent customTabsIntent = getDefaultCustomTabsIntentBuilder(customActionBar)
                 .setStartAnimations(this, R.anim.slide_in_right, R.anim.slide_out_left)
                 .setExitAnimations(this, R.anim.slide_in_left, R.anim.slide_out_right)
                 .build();
@@ -71,10 +80,17 @@ public final class MainActivity extends AppCompatActivity {
         CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent);
 
         // This is where the magic happens...
+        WebViewFallback webViewFallback = new WebViewFallback();
+        if (customActionBar) {
+            webViewFallback
+                    .setTheme(R.style.AppTheme_Custom)
+                    .setUpDrawable(R.drawable.ic_arrow_back_white_24dp)
+                    .setUpTintColor(ContextCompat.getColor(this, R.color.colorTitleTintCustom));
+        }
         CustomTabsHelper.openCustomTab(
                 this, customTabsIntent,
                 Uri.parse(GITHUB_PAGE),
-                new WebViewFallback());
+                webViewFallback);
     }
 
     /**
@@ -85,11 +101,12 @@ public final class MainActivity extends AppCompatActivity {
      *
      * @return {@link CustomTabsIntent.Builder} with defaults already applied
      */
-    private CustomTabsIntent.Builder getDefaultCustomTabsIntentBuilder() {
-        Bitmap backArrow = getBitmapFromVectorDrawable(R.drawable.ic_arrow_back_white_24dp);
+    private CustomTabsIntent.Builder getDefaultCustomTabsIntentBuilder(boolean customActionBar) {
+        Bitmap backArrow = getBitmapFromVectorDrawable(R.drawable.ic_arrow_back_white_24dp,
+                customActionBar ? ContextCompat.getColor(this, R.color.colorTitleTintCustom) : 0);
         return new CustomTabsIntent.Builder()
                 .addDefaultShareMenuItem()
-                .setToolbarColor(this.getResources().getColor(R.color.colorPrimary))
+                .setToolbarColor(getResources().getColor(customActionBar ? R.color.colorPrimaryCustom : R.color.colorPrimary))
                 .setShowTitle(true)
                 .setCloseButtonIcon(backArrow);
     }
@@ -98,15 +115,19 @@ public final class MainActivity extends AppCompatActivity {
      * Converts a vector asset to a bitmap as required by {@link CustomTabsIntent.Builder#setCloseButtonIcon(Bitmap)}
      *
      * @param drawableId The drawable ID
+     * @param tintColor  The drawable tint color
      * @return Bitmap equivalent
      */
-    private Bitmap getBitmapFromVectorDrawable(final @DrawableRes int drawableId) {
+    private Bitmap getBitmapFromVectorDrawable(final @DrawableRes int drawableId, final @ColorInt int tintColor) {
         Drawable drawable = AppCompatResources.getDrawable(this, drawableId);
         if (drawable == null) {
             return null;
         }
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             drawable = (DrawableCompat.wrap(drawable)).mutate();
+        }
+        if (tintColor != 0) {
+            DrawableCompat.setTint(drawable, tintColor);
         }
 
         Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
