@@ -83,7 +83,7 @@ public final class MainActivity extends AppCompatActivity {
         WebViewFallback webViewFallback = new WebViewFallback();
         if (customActionBar) {
             webViewFallback
-                    .setTheme(R.style.AppTheme_Custom)
+                    .setTheme(R.style.AppThemeCustom)
                     .setUpDrawable(R.drawable.ic_arrow_back_white_24dp)
                     .setUpTintColor(ContextCompat.getColor(this, R.color.colorTitleTintCustom));
         }
