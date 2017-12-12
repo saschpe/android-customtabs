@@ -63,6 +63,7 @@ public final class CustomTabsHelper {
         private int toolbarColor;
         private int closeButtonIcon;
         private int closeButtonTintColor;
+        private boolean openWebViewFallback = true;
         private boolean addKeepAliveExtra;
 
         private CustomTabsIntent.Builder customTabsIntentBuilder;
@@ -93,6 +94,11 @@ public final class CustomTabsHelper {
 
         public Builder setCloseButtonTintColor(@ColorInt int closeButtonTintColor) {
             this.closeButtonTintColor = closeButtonTintColor;
+            return this;
+        }
+
+        public Builder setOpenWebViewFallback(boolean openWebViewFallback) {
+            this.openWebViewFallback = openWebViewFallback;
             return this;
         }
 
@@ -132,13 +138,15 @@ public final class CustomTabsHelper {
             //If we cant find a package name, it means there's no browser that supports
             //Chrome Custom Tabs installed. So, we fallback to the web-view
             if (packageName == null) {
-                // build WebView activity fallback
-                WebViewFallback webViewFallback = new WebViewFallback()
-                        .setTheme(theme)
-                        .setCloseButtonIcon(closeButtonIcon)
-                        .setCloseButtonTintColor(closeButtonTintColor);
+                if (openWebViewFallback) {
+                    // build WebView activity fallback
+                    WebViewFallback webViewFallback = new WebViewFallback()
+                            .setTheme(theme)
+                            .setCloseButtonIcon(closeButtonIcon)
+                            .setCloseButtonTintColor(closeButtonTintColor);
 
-                webViewFallback.openUri(context, uri);
+                    webViewFallback.openUri(context, uri);
+                }
             } else {
                 // build CustomTabsIntent
                 CustomTabsIntent customTabsIntent = getCustomTabsIntentBuilder().build();
