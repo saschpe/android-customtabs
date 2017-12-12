@@ -132,7 +132,10 @@ public final class CustomTabsHelper {
             return customTabsIntentBuilder;
         }
 
-        public void open() {
+        /**
+         * @return true if open with Chrome or Webview, false if not open
+         */
+        public boolean open() {
             String packageName = CustomTabsPackageHelper.getPackageNameToUse(context);
 
             //If we cant find a package name, it means there's no browser that supports
@@ -146,6 +149,7 @@ public final class CustomTabsHelper {
                             .setCloseButtonTintColor(closeButtonTintColor);
 
                     webViewFallback.openUri(context, uri);
+                    return true;
                 }
             } else {
                 // build CustomTabsIntent
@@ -166,7 +170,10 @@ public final class CustomTabsHelper {
 
                 customTabsIntent.intent.setPackage(packageName);
                 customTabsIntent.launchUrl(context, uri);
+                return true;
             }
+
+            return false;
         }
     }
 
