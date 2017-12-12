@@ -39,6 +39,11 @@ public final class WebViewActivity extends AppCompatActivity {
     public static final String EXTRA_URL = WebViewActivity.class.getName() + ".EXTRA_URL";
 
     /**
+     * Optional activity theme
+     */
+    public static final String EXTRA_ACTIVITY_THEME = WebViewActivity.class.getName() + ".EXTRA_ACTIVITY_THEME";
+
+    /**
      * Optional up navigation drawable
      * Default is {@link android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material}
      */
@@ -55,12 +60,17 @@ public final class WebViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_webview);
 
         String title = getIntent().getStringExtra(EXTRA_TITLE);
         String url = getIntent().getStringExtra(EXTRA_URL);
+        int theme = getIntent().getIntExtra(EXTRA_ACTIVITY_THEME, UNDEFINED_RESOURCE);
         int upDrawable = getIntent().getIntExtra(EXTRA_UP_NAVIGATION_DRAWABLE, UNDEFINED_RESOURCE);
         int upTintColor = getIntent().getIntExtra(EXTRA_UP_NAVIGATION_TINT_COLOR, UNDEFINED_RESOURCE);
+
+        if (theme != UNDEFINED_RESOURCE) {
+            setTheme(theme);
+        }
+        setContentView(R.layout.activity_webview);
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
