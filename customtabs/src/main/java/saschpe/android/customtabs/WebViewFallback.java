@@ -25,6 +25,18 @@ import android.net.Uri;
  * that uses {@link WebViewActivity} to display the requested {@link Uri}.
  */
 public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback {
+
+    /**
+     * Optional up navigation drawable
+     * Default is {@link android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material}
+     */
+    private int upDrawable;
+
+    /**
+     * Optional up navigation tint color
+     */
+    private int upTintColor;
+
     /**
      * @param context The {@link Context} that wants to open the Uri
      * @param uri     The {@link Uri} to be opened by the fallback
@@ -33,6 +45,18 @@ public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback
     public void openUri(final Context context, final Uri uri) {
         Intent intent = new Intent(context, WebViewActivity.class);
         intent.putExtra(WebViewActivity.EXTRA_URL, uri.toString());
+        intent.putExtra(WebViewActivity.EXTRA_UP_NAVIGATION_DRAWABLE, upDrawable);
+        intent.putExtra(WebViewActivity.EXTRA_UP_NAVIGATION_TINT_COLOR, upTintColor);
         context.startActivity(intent);
+    }
+
+    public WebViewFallback setUpDrawable(int upDrawable) {
+        this.upDrawable = upDrawable;
+        return this;
+    }
+
+    public WebViewFallback setUpTintColor(int upTintColor) {
+        this.upTintColor = upTintColor;
+        return this;
     }
 }

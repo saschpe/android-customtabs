@@ -17,8 +17,10 @@
 package saschpe.android.customtabs;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -36,6 +38,19 @@ public final class WebViewActivity extends AppCompatActivity {
      */
     public static final String EXTRA_URL = WebViewActivity.class.getName() + ".EXTRA_URL";
 
+    /**
+     * Optional up navigation drawable
+     * Default is {@link android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material}
+     */
+    public static final String EXTRA_UP_NAVIGATION_DRAWABLE = WebViewActivity.class.getName() + ".EXTRA_UP_NAVIGATION_DRAWABLE";
+
+    /**
+     * Optional up navigation tint color
+     */
+    public static final String EXTRA_UP_NAVIGATION_TINT_COLOR = WebViewActivity.class.getName() + ".EXTRA_UP_NAVIGATION_TINT_COLOR";
+
+    private static int UNDEFINED_RESOURCE = 0;
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,10 +59,15 @@ public final class WebViewActivity extends AppCompatActivity {
 
         String title = getIntent().getStringExtra(EXTRA_TITLE);
         String url = getIntent().getStringExtra(EXTRA_URL);
+        int upDrawable = getIntent().getIntExtra(EXTRA_UP_NAVIGATION_DRAWABLE, UNDEFINED_RESOURCE);
+        int upTintColor = getIntent().getIntExtra(EXTRA_UP_NAVIGATION_TINT_COLOR, UNDEFINED_RESOURCE);
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            if (upDrawable != UNDEFINED_RESOURCE || upTintColor != UNDEFINED_RESOURCE) {
+                actionBar.setHomeAsUpIndicator(buildUpNavigationDrawable(upDrawable, upTintColor));
+            }
             if (title != null) {
                 actionBar.setTitle(title);
                 actionBar.setSubtitle(url);
@@ -83,5 +103,20 @@ public final class WebViewActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private Drawable buildUpNavigationDrawable(int drawable, int tintColor) {
+        Drawable arrowDrawable = getResources().getDrawable(drawable != UNDEFINED_RESOURCE ? drawable : R.drawable.abc_ic_ab_back_material);
+        Drawable wrapped = DrawableCompat.wrap(arrowDrawable);
+
+        if (arrowDrawable != null && wrapped != null) {
+            // This should avoid tinting all the arrows
+            arrowDrawable.mutate();
+            if (tintColor != UNDEFINED_RESOURCE) {
+                DrawableCompat.setTint(wrapped, tintColor);
+            }
+        }
+
+        return wrapped;
     }
 }
