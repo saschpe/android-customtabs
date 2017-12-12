@@ -6,7 +6,7 @@ android:
     - platform-tools
     - tools
     - build-tools-26.0.2
-    - android-26
+    - android-27
     - extra-android-m2repository
     - extra-google-m2repository 
   licenses:
@@ -32,6 +32,10 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
+
+before_install:
+  - yes | sdkmanager "platforms;android-27"
+
 script:
     - echo "Travis branch is $TRAVIS_BRANCH"
     - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
