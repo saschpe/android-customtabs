@@ -29,21 +29,9 @@ import android.support.annotation.StyleRes;
  */
 public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback {
 
-    /**
-     * Optional activity theme
-     */
     private int theme;
-
-    /**
-     * Optional up navigation drawable
-     * Default is {@link android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material}
-     */
-    private int upDrawable;
-
-    /**
-     * Optional up navigation tint color
-     */
-    private int upTintColor;
+    private int closeButtonIcon;
+    private int closeButtonTintColor;
 
     /**
      * @param context The {@link Context} that wants to open the Uri
@@ -54,8 +42,8 @@ public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback
         Intent intent = new Intent(context, WebViewActivity.class);
         intent.putExtra(WebViewActivity.EXTRA_URL, uri.toString());
         intent.putExtra(WebViewActivity.EXTRA_ACTIVITY_THEME, theme);
-        intent.putExtra(WebViewActivity.EXTRA_UP_NAVIGATION_DRAWABLE, upDrawable);
-        intent.putExtra(WebViewActivity.EXTRA_UP_NAVIGATION_TINT_COLOR, upTintColor);
+        intent.putExtra(WebViewActivity.EXTRA_CLOSE_BUTTON_ICON, closeButtonIcon);
+        intent.putExtra(WebViewActivity.EXTRA_CLOSE_BUTTON_TINT_COLOR, closeButtonTintColor);
         context.startActivity(intent);
     }
 
@@ -64,13 +52,13 @@ public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback
         return this;
     }
 
-    public WebViewFallback setUpDrawable(@DrawableRes int upDrawable) {
-        this.upDrawable = upDrawable;
+    public WebViewFallback setCloseButtonIcon(@DrawableRes int closeButtonIcon) {
+        this.closeButtonIcon = closeButtonIcon;
         return this;
     }
 
-    public WebViewFallback setUpTintColor(@ColorInt int upTintColor) {
-        this.upTintColor = upTintColor;
+    public WebViewFallback setCloseButtonTintColor(@ColorInt int closeButtonTintColor) {
+        this.closeButtonTintColor = closeButtonTintColor;
         return this;
     }
 }

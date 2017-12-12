@@ -135,8 +135,8 @@ public final class CustomTabsHelper {
                 // build WebView activity fallback
                 WebViewFallback webViewFallback = new WebViewFallback()
                         .setTheme(theme)
-                        .setUpDrawable(closeButtonIcon)
-                        .setUpTintColor(closeButtonTintColor);
+                        .setCloseButtonIcon(closeButtonIcon)
+                        .setCloseButtonTintColor(closeButtonTintColor);
 
                 webViewFallback.openUri(context, uri);
             } else {

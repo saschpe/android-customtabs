@@ -27,6 +27,8 @@ import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import static saschpe.android.customtabs.CustomTabsHelper.UNDEFINED_RESOURCE;
+
 public final class WebViewActivity extends AppCompatActivity {
     /**
      * Optional title resource for the actionbar / toolbar.
@@ -44,17 +46,15 @@ public final class WebViewActivity extends AppCompatActivity {
     public static final String EXTRA_ACTIVITY_THEME = WebViewActivity.class.getName() + ".EXTRA_ACTIVITY_THEME";
 
     /**
-     * Optional up navigation drawable
+     * Optional close button (up navigation) drawable
      * Default is {@link android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material}
      */
-    public static final String EXTRA_UP_NAVIGATION_DRAWABLE = WebViewActivity.class.getName() + ".EXTRA_UP_NAVIGATION_DRAWABLE";
+    public static final String EXTRA_CLOSE_BUTTON_ICON = WebViewActivity.class.getName() + ".EXTRA_CLOSE_BUTTON_ICON";
 
     /**
-     * Optional up navigation tint color
+     * Optional close button (up navigation) tint color
      */
-    public static final String EXTRA_UP_NAVIGATION_TINT_COLOR = WebViewActivity.class.getName() + ".EXTRA_UP_NAVIGATION_TINT_COLOR";
-
-    private static int UNDEFINED_RESOURCE = 0;
+    public static final String EXTRA_CLOSE_BUTTON_TINT_COLOR = WebViewActivity.class.getName() + ".EXTRA_CLOSE_BUTTON_TINT_COLOR";
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -64,8 +64,8 @@ public final class WebViewActivity extends AppCompatActivity {
         String title = getIntent().getStringExtra(EXTRA_TITLE);
         String url = getIntent().getStringExtra(EXTRA_URL);
         int theme = getIntent().getIntExtra(EXTRA_ACTIVITY_THEME, UNDEFINED_RESOURCE);
-        int upDrawable = getIntent().getIntExtra(EXTRA_UP_NAVIGATION_DRAWABLE, UNDEFINED_RESOURCE);
-        int upTintColor = getIntent().getIntExtra(EXTRA_UP_NAVIGATION_TINT_COLOR, UNDEFINED_RESOURCE);
+        int closeButtonIcon = getIntent().getIntExtra(EXTRA_CLOSE_BUTTON_ICON, UNDEFINED_RESOURCE);
+        int closeButtonTintColor = getIntent().getIntExtra(EXTRA_CLOSE_BUTTON_TINT_COLOR, UNDEFINED_RESOURCE);
 
         if (theme != UNDEFINED_RESOURCE) {
             setTheme(theme);
@@ -75,8 +75,8 @@ public final class WebViewActivity extends AppCompatActivity {
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
-            if (upDrawable != UNDEFINED_RESOURCE || upTintColor != UNDEFINED_RESOURCE) {
-                actionBar.setHomeAsUpIndicator(buildUpNavigationDrawable(upDrawable, upTintColor));
+            if (closeButtonIcon != UNDEFINED_RESOURCE || closeButtonTintColor != UNDEFINED_RESOURCE) {
+                actionBar.setHomeAsUpIndicator(buildUpNavigationDrawable(closeButtonIcon, closeButtonTintColor));
             }
             if (title != null) {
                 actionBar.setTitle(title);
