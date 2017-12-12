@@ -21,7 +21,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.StyleRes;
 
 /**
  * Default {@link CustomTabsHelper.CustomTabFallback} implementation
@@ -29,8 +28,8 @@ import android.support.annotation.StyleRes;
  */
 public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback {
 
-    private int theme;
     private int toolbarColor;
+    private int toolbarDarkColor;
     private int closeButtonIcon;
     private int toolbarItemColor;
 
@@ -42,20 +41,20 @@ public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback
     public void openUri(final Context context, final Uri uri) {
         Intent intent = new Intent(context, WebViewActivity.class);
         intent.putExtra(WebViewActivity.EXTRA_URL, uri.toString());
-        intent.putExtra(WebViewActivity.EXTRA_ACTIVITY_THEME, theme);
         intent.putExtra(WebViewActivity.EXTRA_TOOLBAR_COLOR, toolbarColor);
+        intent.putExtra(WebViewActivity.EXTRA_TOOLBAR_DARK_COLOR, toolbarDarkColor);
         intent.putExtra(WebViewActivity.EXTRA_CLOSE_BUTTON_ICON, closeButtonIcon);
         intent.putExtra(WebViewActivity.EXTRA_TOOLBAR_ITEM_COLOR, toolbarItemColor);
         context.startActivity(intent);
     }
 
-    public WebViewFallback setTheme(@StyleRes int theme) {
-        this.theme = theme;
+    public WebViewFallback setToolbarColor(@ColorInt int toolbarColor) {
+        this.toolbarColor = toolbarColor;
         return this;
     }
 
-    public WebViewFallback setToolbarColor(@ColorInt int toolbarColor) {
-        this.toolbarColor = toolbarColor;
+    public WebViewFallback setToolbarDarkColor(@ColorInt int toolbarDarkColor) {
+        this.toolbarDarkColor = toolbarDarkColor;
         return this;
     }
 

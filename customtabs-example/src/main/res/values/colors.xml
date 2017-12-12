@@ -23,7 +23,7 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorPrimaryCustom">#ff00ff</color>
-    <color name="colorPrimaryDarkCustom">#ff00ff</color>
+    <color name="colorPrimaryDarkCustom">#dd00ff</color>
     <color name="colorTitleTintCustom">#000</color>
 
 </resources>

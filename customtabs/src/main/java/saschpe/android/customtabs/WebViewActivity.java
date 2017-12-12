@@ -19,6 +19,7 @@ package saschpe.android.customtabs;
 import android.annotation.SuppressLint;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -45,11 +46,6 @@ public final class WebViewActivity extends AppCompatActivity {
     public static final String EXTRA_URL = WebViewActivity.class.getName() + ".EXTRA_URL";
 
     /**
-     * Optional activity theme
-     */
-    public static final String EXTRA_ACTIVITY_THEME = WebViewActivity.class.getName() + ".EXTRA_ACTIVITY_THEME";
-
-    /**
      * Optional close button (up navigation) drawable
      * Default is {@link android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material}
      */
@@ -61,26 +57,27 @@ public final class WebViewActivity extends AppCompatActivity {
     public static final String EXTRA_TOOLBAR_ITEM_COLOR = WebViewActivity.class.getName() + ".EXTRA_TOOLBAR_ITEM_COLOR";
 
     /**
-     * Optional toolbar background color
+     * Optional toolbar background color (colorPrimary in theme)
      */
     public static final String EXTRA_TOOLBAR_COLOR = WebViewActivity.class.getName() + ".EXTRA_TOOLBAR_COLOR";
+
+    /**
+     * Optional status bar background color (colorPrimaryDark in theme)
+     */
+    public static final String EXTRA_TOOLBAR_DARK_COLOR = WebViewActivity.class.getName() + ".EXTRA_TOOLBAR_DARK_COLOR";
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_webview);
 
         String title = getIntent().getStringExtra(EXTRA_TITLE);
         String url = getIntent().getStringExtra(EXTRA_URL);
-        int theme = getIntent().getIntExtra(EXTRA_ACTIVITY_THEME, UNDEFINED_RESOURCE);
         int toolbarColor = getIntent().getIntExtra(EXTRA_TOOLBAR_COLOR, UNDEFINED_RESOURCE);
+        int toolbarDarkColor = getIntent().getIntExtra(EXTRA_TOOLBAR_DARK_COLOR, UNDEFINED_RESOURCE);
         int closeButtonIcon = getIntent().getIntExtra(EXTRA_CLOSE_BUTTON_ICON, UNDEFINED_RESOURCE);
         final int toolbarItemColor = getIntent().getIntExtra(EXTRA_TOOLBAR_ITEM_COLOR, UNDEFINED_RESOURCE);
-
-        if (theme != UNDEFINED_RESOURCE) {
-            setTheme(theme);
-        }
-        setContentView(R.layout.activity_webview);
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -92,6 +89,9 @@ public final class WebViewActivity extends AppCompatActivity {
 
             if (toolbarColor != UNDEFINED_RESOURCE) {
                 actionBar.setBackgroundDrawable(new ColorDrawable(toolbarColor));
+            }
+            if (toolbarDarkColor != UNDEFINED_RESOURCE && Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(toolbarDarkColor);
             }
 
             if (title != null) {

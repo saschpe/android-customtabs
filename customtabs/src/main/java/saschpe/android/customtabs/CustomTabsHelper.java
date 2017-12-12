@@ -28,7 +28,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.StyleRes;
 import android.support.customtabs.CustomTabsClient;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.customtabs.CustomTabsServiceConnection;
@@ -59,8 +58,8 @@ public final class CustomTabsHelper {
 
         private final Context context;
         private final Uri uri;
-        private int theme;
         private int toolbarColor;
+        private int toolbarDarkColor;
         private int closeButtonIcon;
         private int toolbarItemColor;
         private boolean openWebViewFallback = true;
@@ -77,13 +76,13 @@ public final class CustomTabsHelper {
             this.uri = uri;
         }
 
-        public Builder setTheme(@StyleRes int theme) {
-            this.theme = theme;
+        public Builder setToolbarColor(@ColorInt int toolbarColor) {
+            this.toolbarColor = toolbarColor;
             return this;
         }
 
-        public Builder setToolbarColor(@ColorInt int toolbarColor) {
-            this.toolbarColor = toolbarColor;
+        public Builder setToolbarDarkColor(int toolbarDarkColor) {
+            this.toolbarDarkColor = toolbarDarkColor;
             return this;
         }
 
@@ -144,8 +143,8 @@ public final class CustomTabsHelper {
                 if (openWebViewFallback) {
                     // build WebView activity fallback
                     WebViewFallback webViewFallback = new WebViewFallback()
-                            .setTheme(theme)
                             .setToolbarColor(toolbarColor)
+                            .setToolbarDarkColor(toolbarDarkColor)
                             .setCloseButtonIcon(closeButtonIcon)
                             .setToolbarItemColor(toolbarItemColor);
 

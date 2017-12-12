@@ -64,10 +64,13 @@ public final class MainActivity extends AppCompatActivity {
      */
     private void startGitHubProjectCustomTab(boolean customActionBar) {
         CustomTabsHelper.Builder customTabsHelperBuilder = new CustomTabsHelper.Builder(this, Uri.parse(GITHUB_PAGE))
-                .setTheme(customActionBar ? R.style.AppThemeCustom : UNDEFINED_RESOURCE)
-                .setToolbarColor(ContextCompat.getColor(this, customActionBar ? R.color.colorPrimaryCustom : R.color.colorPrimary))
+                .setToolbarColor(ContextCompat.getColor(this, customActionBar ?
+                        R.color.colorPrimaryCustom : R.color.colorPrimary))
+                .setToolbarDarkColor(ContextCompat.getColor(this, customActionBar ?
+                        R.color.colorPrimaryDarkCustom : R.color.colorPrimaryDark))
                 .setCloseButtonIcon(R.drawable.ic_arrow_back_white_24dp)
-                .setToolbarItemColor(customActionBar ? ContextCompat.getColor(this, R.color.colorTitleTintCustom) : UNDEFINED_RESOURCE)
+                .setToolbarItemColor(customActionBar ?
+                        ContextCompat.getColor(this, R.color.colorTitleTintCustom) : UNDEFINED_RESOURCE)
                 .setAddKeepAliveExtra(true);
 
         // Get and apply some fancy animation to show off
