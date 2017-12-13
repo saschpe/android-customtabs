@@ -70,6 +70,7 @@ public final class WebViewActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.WebViewTheme);
         setContentView(R.layout.activity_webview);
 
         String title = getIntent().getStringExtra(EXTRA_TITLE);
