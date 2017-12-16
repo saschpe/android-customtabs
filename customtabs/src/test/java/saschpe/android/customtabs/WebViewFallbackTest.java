@@ -32,7 +32,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 26)
+@Config(constants = BuildConfig.class, sdk = 27)
 public final class WebViewFallbackTest {
     private static final String GITHUB_PAGE = "https://github.com/saschpe/android-customtabs/";
 

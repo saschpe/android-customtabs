@@ -16,33 +16,35 @@
 
 package saschpe.android.customtabs;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
+import org.robolectric.annotation.Config;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(JUnit4.class)
+@RunWith(RobolectricTestRunner.class)
+@Config(constants = BuildConfig.class, sdk = 27)
 public final class CustomTabsPackageHelperTest {
-    @Ignore
-    public void getPackageNameToUse() {
+    @Test
+    public void getPackageNameToUse_noMockingReturnsNull() {
         // Arrange, act
         String packageName = CustomTabsPackageHelper.getPackageNameToUse(RuntimeEnvironment.application);
 
-        // Verify
-        assertEquals("foo", packageName);
+        // Assert
+        assertEquals(null, packageName);
     }
+
     @Test
     public void getPackages() {
         // Arrange, act
         List<String> packages = CustomTabsPackageHelper.getPackages();
 
-        // Verify
+        // Assert
         assertTrue(packages.contains(CustomTabsPackageHelper.STABLE_PACKAGE));
         assertTrue(packages.contains(CustomTabsPackageHelper.BETA_PACKAGE));
         assertTrue(packages.contains(CustomTabsPackageHelper.DEV_PACKAGE));

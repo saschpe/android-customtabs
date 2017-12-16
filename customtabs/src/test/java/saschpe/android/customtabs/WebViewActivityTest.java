@@ -30,8 +30,8 @@ import org.robolectric.annotation.Config;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 26)
-@Ignore // TODO: Some issues need fixing
+@Ignore
+@Config(constants = BuildConfig.class, sdk = 27)
 public final class WebViewActivityTest {
     private static final String TEST_URL = "http://sascha.peilicke.de";
     private static final String TEST_TITLE = "Sascha Peilicke";
