@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <!--
   ~ Copyright 2017 Sascha Peilicke
   ~
@@ -20,5 +21,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="colorPrimaryCustom">#ff00ff</color>
+    <color name="colorPrimaryDarkCustom">#dd00ff</color>
+    <color name="colorTitleTintCustom">#000</color>
 
 </resources>

@@ -17,13 +17,22 @@
 package saschpe.android.customtabs;
 
 import android.annotation.SuppressLint;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import saschpe.android.customtabs.utils.Utils;
+
+import static saschpe.android.customtabs.CustomTabsHelper.UNDEFINED_RESOURCE;
 
 public final class WebViewActivity extends AppCompatActivity {
     /**
@@ -36,23 +45,63 @@ public final class WebViewActivity extends AppCompatActivity {
      */
     public static final String EXTRA_URL = WebViewActivity.class.getName() + ".EXTRA_URL";
 
+    /**
+     * Optional close button (up navigation) drawable
+     * Default is {@link android.support.v7.appcompat.R.drawable.abc_ic_ab_back_material}
+     */
+    public static final String EXTRA_CLOSE_BUTTON_ICON = WebViewActivity.class.getName() + ".EXTRA_CLOSE_BUTTON_ICON";
+
+    /**
+     * Optional close button (up navigation) tint color and title text color
+     */
+    public static final String EXTRA_TOOLBAR_ITEM_COLOR = WebViewActivity.class.getName() + ".EXTRA_TOOLBAR_ITEM_COLOR";
+
+    /**
+     * Optional toolbar background color (colorPrimary in theme)
+     */
+    public static final String EXTRA_TOOLBAR_COLOR = WebViewActivity.class.getName() + ".EXTRA_TOOLBAR_COLOR";
+
+    /**
+     * Optional status bar background color (colorPrimaryDark in theme)
+     */
+    public static final String EXTRA_TOOLBAR_DARK_COLOR = WebViewActivity.class.getName() + ".EXTRA_TOOLBAR_DARK_COLOR";
+
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.WebViewTheme);
         setContentView(R.layout.activity_webview);
 
         String title = getIntent().getStringExtra(EXTRA_TITLE);
         String url = getIntent().getStringExtra(EXTRA_URL);
+        int toolbarColor = getIntent().getIntExtra(EXTRA_TOOLBAR_COLOR, UNDEFINED_RESOURCE);
+        int toolbarDarkColor = getIntent().getIntExtra(EXTRA_TOOLBAR_DARK_COLOR, UNDEFINED_RESOURCE);
+        int closeButtonIcon = getIntent().getIntExtra(EXTRA_CLOSE_BUTTON_ICON, UNDEFINED_RESOURCE);
+        final int toolbarItemColor = getIntent().getIntExtra(EXTRA_TOOLBAR_ITEM_COLOR, UNDEFINED_RESOURCE);
 
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+
+            if (closeButtonIcon != UNDEFINED_RESOURCE || toolbarItemColor != UNDEFINED_RESOURCE) {
+                actionBar.setHomeAsUpIndicator(Utils.getDrawable(this,
+                        closeButtonIcon == UNDEFINED_RESOURCE ? R.drawable.abc_ic_ab_back_material : closeButtonIcon,
+                        toolbarItemColor));
+            }
+
+            if (toolbarColor != UNDEFINED_RESOURCE) {
+                actionBar.setBackgroundDrawable(new ColorDrawable(toolbarColor));
+            }
+            if (toolbarDarkColor != UNDEFINED_RESOURCE && Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(toolbarDarkColor);
+            }
+
             if (title != null) {
-                actionBar.setTitle(title);
-                actionBar.setSubtitle(url);
+                actionBar.setTitle(buildTitleSpannable(title, toolbarItemColor));
+                actionBar.setSubtitle(buildTitleSpannable(url, toolbarItemColor));
             } else {
-                actionBar.setTitle(url);
+                actionBar.setTitle(buildTitleSpannable(url, toolbarItemColor));
             }
         }
 
@@ -67,8 +116,8 @@ public final class WebViewActivity extends AppCompatActivity {
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
                     if (actionBar != null) {
-                        actionBar.setTitle(view.getTitle());
-                        actionBar.setSubtitle(url);
+                        actionBar.setTitle(buildTitleSpannable(view.getTitle(), toolbarItemColor));
+                        actionBar.setSubtitle(buildTitleSpannable(url, toolbarItemColor));
                     }
                 }
             });
@@ -83,5 +132,13 @@ public final class WebViewActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private Spannable buildTitleSpannable(String s, int textColor) {
+        Spannable text = new SpannableString(s);
+        if (textColor != UNDEFINED_RESOURCE) {
+            text.setSpan(new ForegroundColorSpan(textColor), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        }
+        return text;
     }
 }

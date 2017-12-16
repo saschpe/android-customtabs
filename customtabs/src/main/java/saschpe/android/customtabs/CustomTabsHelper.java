@@ -20,9 +20,12 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 import android.support.customtabs.CustomTabsClient;
 import android.support.customtabs.CustomTabsIntent;
 import android.support.customtabs.CustomTabsServiceConnection;
@@ -30,7 +33,17 @@ import android.support.customtabs.CustomTabsSession;
 
 import java.util.List;
 
+import saschpe.android.customtabs.utils.Utils;
+
+/**
+ * A helper wrapper help to opens the URL on a Custom Tab if possible. Otherwise fallsback to
+ * opening it on a WebView
+ */
+
 public final class CustomTabsHelper {
+
+    public static int UNDEFINED_RESOURCE = 0;
+
     private static final String EXTRA_CUSTOM_TABS_KEEP_ALIVE =
             "android.support.customtabs.extra.KEEP_ALIVE";
 
@@ -39,43 +52,128 @@ public final class CustomTabsHelper {
     private CustomTabsServiceConnection connection;
     private ConnectionCallback connectionCallback;
 
-    /**
-     * Opens the URL on a Custom Tab if possible. Otherwise fallsback to opening it on a WebView
-     *
-     * @param context         The host activity
-     * @param customTabsIntent a CustomTabsIntent to be used if Custom Tabs is available
-     * @param uri              the Uri to be opened
-     * @param fallback         a CustomTabFallback to be used if Custom Tabs is not available
-     */
-    public static void openCustomTab(final Context context,
-                                     final CustomTabsIntent customTabsIntent,
-                                     final Uri uri,
-                                     final CustomTabFallback fallback) {
-        String packageName = CustomTabsPackageHelper.getPackageNameToUse(context);
+    public static class Builder {
 
-        //If we cant find a package name, it means there's no browser that supports
-        //Chrome Custom Tabs installed. So, we fallback to the web-view
-        if (packageName == null) {
-            if (fallback != null) {
-                fallback.openUri(context, uri);
-            }
-        } else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
-                customTabsIntent.intent
-                        .putExtra(Intent.EXTRA_REFERRER,
-                                Uri.parse(Intent.URI_ANDROID_APP_SCHEME + "//" + context.getPackageName()));
-            }
+        private final Context context;
+        private final Uri uri;
+        private int toolbarColor;
+        private int toolbarDarkColor;
+        private int closeButtonIcon;
+        private int toolbarItemColor;
+        private boolean openWebViewFallback = true;
+        private boolean addKeepAliveExtra;
 
-            customTabsIntent.intent.setPackage(packageName);
-            customTabsIntent.launchUrl(context, uri);
+        private CustomTabsIntent.Builder customTabsIntentBuilder;
+
+        /**
+         * @param context The host activity
+         * @param uri     the Uri to be opened
+         */
+        public Builder(Context context, Uri uri) {
+            this.context = context;
+            this.uri = uri;
         }
-    }
 
-    public static void addKeepAliveExtra(final Context context, final Intent intent) {
-        Intent keepAliveIntent = new Intent().setClassName(
-                context.getPackageName(),
-                KeepAliveService.class.getCanonicalName());
-        intent.putExtra(EXTRA_CUSTOM_TABS_KEEP_ALIVE, keepAliveIntent);
+        public Builder setToolbarColor(@ColorInt int toolbarColor) {
+            this.toolbarColor = toolbarColor;
+            return this;
+        }
+
+        public Builder setToolbarDarkColor(int toolbarDarkColor) {
+            this.toolbarDarkColor = toolbarDarkColor;
+            return this;
+        }
+
+        public Builder setCloseButtonIcon(@DrawableRes int closeButtonIcon) {
+            this.closeButtonIcon = closeButtonIcon;
+            return this;
+        }
+
+        public Builder setToolbarItemColor(@ColorInt int toolbarItemColor) {
+            this.toolbarItemColor = toolbarItemColor;
+            return this;
+        }
+
+        public Builder setOpenWebViewFallback(boolean openWebViewFallback) {
+            this.openWebViewFallback = openWebViewFallback;
+            return this;
+        }
+
+        public Builder setAddKeepAliveExtra(boolean addKeepAliveExtra) {
+            this.addKeepAliveExtra = addKeepAliveExtra;
+            return this;
+        }
+
+        /**
+         * Apply some sane defaults across a single app.
+         * <b>
+         * Not strictly necessary but simplifies code when having many different
+         * custom tab intents in one app.
+         *
+         * @return {@link CustomTabsIntent.Builder}
+         */
+        public CustomTabsIntent.Builder getCustomTabsIntentBuilder() {
+            if (customTabsIntentBuilder == null) {
+                customTabsIntentBuilder = new CustomTabsIntent.Builder();
+            }
+
+            customTabsIntentBuilder
+                    .addDefaultShareMenuItem()
+                    .setToolbarColor(toolbarColor)
+                    .setShowTitle(true);
+
+            Bitmap backArrow = Utils.getBitmapFromVectorDrawable(context, closeButtonIcon, toolbarItemColor);
+            if (backArrow != null) {
+                customTabsIntentBuilder.setCloseButtonIcon(backArrow);
+            }
+
+            return customTabsIntentBuilder;
+        }
+
+        /**
+         * @return true if open with Chrome or Webview, false if not open
+         */
+        public boolean open() {
+            String packageName = CustomTabsPackageHelper.getPackageNameToUse(context);
+
+            //If we cant find a package name, it means there's no browser that supports
+            //Chrome Custom Tabs installed. So, we fallback to the web-view
+            if (packageName == null) {
+                if (openWebViewFallback) {
+                    // build WebView activity fallback
+                    WebViewFallback webViewFallback = new WebViewFallback()
+                            .setToolbarColor(toolbarColor)
+                            .setToolbarDarkColor(toolbarDarkColor)
+                            .setCloseButtonIcon(closeButtonIcon)
+                            .setToolbarItemColor(toolbarItemColor);
+
+                    webViewFallback.openUri(context, uri);
+                    return true;
+                }
+            } else {
+                // build CustomTabsIntent
+                CustomTabsIntent customTabsIntent = getCustomTabsIntentBuilder().build();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
+                    customTabsIntent.intent
+                            .putExtra(Intent.EXTRA_REFERRER,
+                                    Uri.parse(Intent.URI_ANDROID_APP_SCHEME + "//" + context.getPackageName()));
+                }
+
+                if (addKeepAliveExtra) {
+                    Intent keepAliveIntent = new Intent().setClassName(
+                            context.getPackageName(),
+                            KeepAliveService.class.getCanonicalName());
+                    customTabsIntent.intent.putExtra(EXTRA_CUSTOM_TABS_KEEP_ALIVE, keepAliveIntent);
+                }
+
+                customTabsIntent.intent.setPackage(packageName);
+                customTabsIntent.launchUrl(context, uri);
+                return true;
+            }
+
+            return false;
+        }
     }
 
     /**
@@ -187,8 +285,8 @@ public final class CustomTabsHelper {
      */
     public interface CustomTabFallback {
         /**
-         * @param context  The Activity that wants to open the Uri
-         * @param uri      The uri to be opened by the fallback
+         * @param context The Activity that wants to open the Uri
+         * @param uri     The uri to be opened by the fallback
          */
         void openUri(Context context, Uri uri);
     }

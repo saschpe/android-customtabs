@@ -16,25 +16,19 @@
 
 package com.example.saschpe.customtabs.activity;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
-import android.support.customtabs.CustomTabsIntent;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.content.res.AppCompatResources;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.example.saschpe.customtabs.R;
 
 import saschpe.android.customtabs.CustomTabsHelper;
-import saschpe.android.customtabs.WebViewFallback;
+
+import static saschpe.android.customtabs.CustomTabsHelper.UNDEFINED_RESOURCE;
 
 public final class MainActivity extends AppCompatActivity {
     private static final String GITHUB_PAGE = "https://github.com/saschpe/android-customtabs";
@@ -48,10 +42,17 @@ public final class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fabCustom = findViewById(R.id.fab_custom);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startGitHubProjectCustomTab();
+                startGitHubProjectCustomTab(false);
+            }
+        });
+        fabCustom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startGitHubProjectCustomTab(true);
             }
         });
     }
@@ -61,60 +62,22 @@ public final class MainActivity extends AppCompatActivity {
      * <p>
      * See https://developer.chrome.com/multidevice/android/customtabs
      */
-    private void startGitHubProjectCustomTab() {
-        // Apply some fancy animation to show off
-        CustomTabsIntent customTabsIntent = getDefaultCustomTabsIntentBuilder()
+    private void startGitHubProjectCustomTab(boolean customActionBar) {
+        CustomTabsHelper.Builder customTabsHelperBuilder = new CustomTabsHelper.Builder(this, Uri.parse(GITHUB_PAGE))
+                .setToolbarColor(ContextCompat.getColor(this, customActionBar ?
+                        R.color.colorPrimaryCustom : R.color.colorPrimary))
+                .setToolbarDarkColor(ContextCompat.getColor(this, customActionBar ?
+                        R.color.colorPrimaryDarkCustom : R.color.colorPrimaryDark))
+                .setCloseButtonIcon(R.drawable.ic_arrow_back_white_24dp)
+                .setToolbarItemColor(customActionBar ?
+                        ContextCompat.getColor(this, R.color.colorTitleTintCustom) : UNDEFINED_RESOURCE)
+                .setAddKeepAliveExtra(true);
+
+        // Get and apply some fancy animation to show off
+        customTabsHelperBuilder.getCustomTabsIntentBuilder()
                 .setStartAnimations(this, R.anim.slide_in_right, R.anim.slide_out_left)
-                .setExitAnimations(this, R.anim.slide_in_left, R.anim.slide_out_right)
-                .build();
+                .setExitAnimations(this, R.anim.slide_in_left, R.anim.slide_out_right);
 
-        CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent);
-
-        // This is where the magic happens...
-        CustomTabsHelper.openCustomTab(
-                this, customTabsIntent,
-                Uri.parse(GITHUB_PAGE),
-                new WebViewFallback());
-    }
-
-    /**
-     * Apply some sane defaults across a single app.
-     * <b>
-     * Not strictly necessary but simplifies code when having many different
-     * custom tab intents in one app.
-     *
-     * @return {@link CustomTabsIntent.Builder} with defaults already applied
-     */
-    private CustomTabsIntent.Builder getDefaultCustomTabsIntentBuilder() {
-        Bitmap backArrow = getBitmapFromVectorDrawable(R.drawable.ic_arrow_back_white_24dp);
-        return new CustomTabsIntent.Builder()
-                .addDefaultShareMenuItem()
-                .setToolbarColor(this.getResources().getColor(R.color.colorPrimary))
-                .setShowTitle(true)
-                .setCloseButtonIcon(backArrow);
-    }
-
-    /**
-     * Converts a vector asset to a bitmap as required by {@link CustomTabsIntent.Builder#setCloseButtonIcon(Bitmap)}
-     *
-     * @param drawableId The drawable ID
-     * @return Bitmap equivalent
-     */
-    private Bitmap getBitmapFromVectorDrawable(final @DrawableRes int drawableId) {
-        Drawable drawable = AppCompatResources.getDrawable(this, drawableId);
-        if (drawable == null) {
-            return null;
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = (DrawableCompat.wrap(drawable)).mutate();
-        }
-
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(),
-                drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
+        customTabsHelperBuilder.open();
     }
 }

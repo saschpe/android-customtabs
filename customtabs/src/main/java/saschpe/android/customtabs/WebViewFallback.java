@@ -19,12 +19,20 @@ package saschpe.android.customtabs;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.annotation.ColorInt;
+import android.support.annotation.DrawableRes;
 
 /**
  * Default {@link CustomTabsHelper.CustomTabFallback} implementation
  * that uses {@link WebViewActivity} to display the requested {@link Uri}.
  */
 public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback {
+
+    private int toolbarColor;
+    private int toolbarDarkColor;
+    private int closeButtonIcon;
+    private int toolbarItemColor;
+
     /**
      * @param context The {@link Context} that wants to open the Uri
      * @param uri     The {@link Uri} to be opened by the fallback
@@ -33,6 +41,30 @@ public final class WebViewFallback implements CustomTabsHelper.CustomTabFallback
     public void openUri(final Context context, final Uri uri) {
         Intent intent = new Intent(context, WebViewActivity.class);
         intent.putExtra(WebViewActivity.EXTRA_URL, uri.toString());
+        intent.putExtra(WebViewActivity.EXTRA_TOOLBAR_COLOR, toolbarColor);
+        intent.putExtra(WebViewActivity.EXTRA_TOOLBAR_DARK_COLOR, toolbarDarkColor);
+        intent.putExtra(WebViewActivity.EXTRA_CLOSE_BUTTON_ICON, closeButtonIcon);
+        intent.putExtra(WebViewActivity.EXTRA_TOOLBAR_ITEM_COLOR, toolbarItemColor);
         context.startActivity(intent);
+    }
+
+    public WebViewFallback setToolbarColor(@ColorInt int toolbarColor) {
+        this.toolbarColor = toolbarColor;
+        return this;
+    }
+
+    public WebViewFallback setToolbarDarkColor(@ColorInt int toolbarDarkColor) {
+        this.toolbarDarkColor = toolbarDarkColor;
+        return this;
+    }
+
+    public WebViewFallback setCloseButtonIcon(@DrawableRes int closeButtonIcon) {
+        this.closeButtonIcon = closeButtonIcon;
+        return this;
+    }
+
+    public WebViewFallback setToolbarItemColor(@ColorInt int toolbarItemColor) {
+        this.toolbarItemColor = toolbarItemColor;
+        return this;
     }
 }
