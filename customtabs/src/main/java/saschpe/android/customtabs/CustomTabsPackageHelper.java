@@ -34,15 +34,15 @@ import java.util.List;
  * Helper class for Custom Tabs.
  */
 final class CustomTabsPackageHelper {
-    private static final String TAG = CustomTabsPackageHelper.class.getSimpleName();
     static final String STABLE_PACKAGE = "com.android.chrome";
     static final String BETA_PACKAGE = "com.chrome.beta";
     static final String DEV_PACKAGE = "com.chrome.dev";
     static final String LOCAL_PACKAGE = "com.google.android.apps.chrome";
-
+    private static final String TAG = CustomTabsPackageHelper.class.getSimpleName();
     private static String packageNameToUse;
 
-    private CustomTabsPackageHelper() {}
+    private CustomTabsPackageHelper() {
+    }
 
     /**
      * Goes through all apps that handle VIEW intents and have a warmup service. Picks

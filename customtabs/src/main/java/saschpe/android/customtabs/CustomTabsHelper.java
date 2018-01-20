@@ -42,7 +42,7 @@ public final class CustomTabsHelper {
     /**
      * Opens the URL on a Custom Tab if possible. Otherwise fallsback to opening it on a WebView
      *
-     * @param context         The host activity
+     * @param context          The host activity
      * @param customTabsIntent a CustomTabsIntent to be used if Custom Tabs is available
      * @param uri              the Uri to be opened
      * @param fallback         a CustomTabFallback to be used if Custom Tabs is not available
@@ -187,8 +187,8 @@ public final class CustomTabsHelper {
      */
     public interface CustomTabFallback {
         /**
-         * @param context  The Activity that wants to open the Uri
-         * @param uri      The uri to be opened by the fallback
+         * @param context The Activity that wants to open the Uri
+         * @param uri     The uri to be opened by the fallback
          */
         void openUri(Context context, Uri uri);
     }
