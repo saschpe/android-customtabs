@@ -51,7 +51,7 @@ compile 'saschpe.android:customtabs:1.1.1'
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
 
-# Usage
+# Users
 * [Alpha+ Player](https://play.google.com/store/apps/details?id=saschpe.alphaplus)
 
 # License
