@@ -33,6 +33,7 @@ allprojects {
 }
 
 ext {
+    robolectricVersion = '3.8'
     supportLibraryVersion = '27.1.1'
 }
 

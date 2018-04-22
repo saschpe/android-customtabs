@@ -57,7 +57,7 @@ dependencies {
     api "com.android.support:customtabs:$rootProject.supportLibraryVersion"
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'org.robolectric:robolectric:3.6.1'
+    testImplementation "org.robolectric:robolectric:$rootProject.robolectricVersion"
     testImplementation 'org.mockito:mockito-core:2.13.0'
 }
 
