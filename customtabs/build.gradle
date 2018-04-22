@@ -53,11 +53,9 @@ android {
 }
 
 dependencies {
-    // Runtime dependencies
-    compile 'com.android.support:appcompat-v7:27.0.2'
-    compile 'com.android.support:customtabs:27.0.2'
+    api "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
+    api "com.android.support:customtabs:$rootProject.supportLibraryVersion"
 
-    // Test dependencies
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.robolectric:robolectric:3.6.1'
     testImplementation 'org.mockito:mockito-core:2.13.0'
