@@ -33,6 +33,7 @@ allprojects {
 }
 
 ext {
+    mockitoVersion = '2.18.3'
     robolectricVersion = '3.8'
     supportLibraryVersion = '27.1.1'
 }
