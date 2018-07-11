@@ -135,7 +135,7 @@ public final class WebViewActivity extends AppCompatActivity {
     }
 
     private Spannable buildTitleSpannable(String s, int textColor) {
-        Spannable text = new SpannableString(s);
+        Spannable text = new SpannableString(s != null ? s : "");
         if (textColor != UNDEFINED_RESOURCE) {
             text.setSpan(new ForegroundColorSpan(textColor), 0, text.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         }
