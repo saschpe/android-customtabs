@@ -8,9 +8,7 @@ android:
     - build-tools-27.0.3
     - android-27
     - extra-android-m2repository
-    - extra-google-m2repository 
-  licenses:
-    - android-sdk-license-.+
+    - extra-google-m2repository
 env:
   global:
     - secure: "sH3nvB01OfdbX/53CiPKGSwHYcjIcRfOPHDVslexcaRWc58hPPwOiFC7NSbdeqX78pl4jtUnK56QVwJgkg01neSPNcBtEkOcUa7TBDBMO7+G9woyRSLdA6knIDbFBRk01WD7Zq6YiyWb7Uar/i0+cPx68PJa926Gd7hd2V3Ab322Kf0vRRMDg4wVY6mml6U1wL4p51Ikl/9BHx/y8BdCam7eL5/HDEkt+QuQGP4q/R+ff9EG07sjLRx/RnyzaBGR7bra81XdY0HRR9irK2Np1C2NHJVOIRoVsV/DcBnjLCg0fAxq3rUyhcmgvp0fvy9nr4Xan4mz8CXGEp8vHVIYkLlD3EhZykjmnxiuYpoY7Ufu/2RwvbTRkzycjLrugOBVPweDo2Gx4Dcc6tzRMggG0whQPIhJ154JRWTRkOOWQtwFsOQKr1pjprmoJioTLKiuRcJQMnGMxrhNPNZJIEmU7PSj/yHbRelP1F4jgacQicNPRo5o+BhC0ef9UBwQFbV4KIEBuYofGFOhSQDWLcjzpzukKSD39Reqw4l27Mp1pZLcZ6NOXyCH9XsjzAp5AUep6Cz7kCiaWQJjEaCy00b+qSyf31v9dOax7+Fu3H2XUwMrrfUKVaqN1aUSqG/jyb/W2S6eMtwKYFC035PPu+1MCF5xI90ymiIPUTMZgoG3uUQ="
@@ -32,11 +30,9 @@ cache:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
     - $HOME/.android/build-cache
-
 before_install:
   - yes | sdkmanager "platforms;android-27"
-
 script:
-    - echo "Travis branch is $TRAVIS_BRANCH"
-    - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
-    - ./gradlew check
+  - echo "Travis branch is $TRAVIS_BRANCH"
+  - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
+  - ./gradlew check
