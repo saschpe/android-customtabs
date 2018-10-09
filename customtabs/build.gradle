@@ -84,52 +84,52 @@ task androidSourcesJar(type: Jar) {
     from android.sourceSets.main.java.srcDirs
 }
 
-afterEvaluate { // https://groups.google.com/forum/#!topic/adt-dev/kzbEHAGbFVg
-    publishing.publications {
-        mavenAndroid(MavenPublication) {
-            groupId
-            artifactId project.name
-            version this.version
+publishing.publications {
+    mavenAndroid(MavenPublication) {
+        groupId
+        artifactId project.name
+        version this.version
 
+        afterEvaluate { // https://groups.google.com/forum/#!topic/adt-dev/kzbEHAGbFVg
             artifact bundleReleaseAar
-            artifact androidJavadocsJar
-            artifact androidSourcesJar
+        }
+        artifact androidJavadocsJar
+        artifact androidSourcesJar
 
-            pom.withXml {
-                final dependenciesNode = asNode().appendNode('dependencies')
+        pom.withXml {
+            final dependenciesNode = asNode().appendNode('dependencies')
 
-                ext.addDependency = { Dependency dep, String scope ->
-                    if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
-                        return // ignore invalid dependencies
+            ext.addDependency = { Dependency dep, String scope ->
+                if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
+                    return // ignore invalid dependencies
 
-                    final dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', dep.group)
-                    dependencyNode.appendNode('artifactId', dep.name)
-                    dependencyNode.appendNode('version', dep.version)
-                    dependencyNode.appendNode('scope', scope)
+                final dependencyNode = dependenciesNode.appendNode('dependency')
+                dependencyNode.appendNode('groupId', dep.group)
+                dependencyNode.appendNode('artifactId', dep.name)
+                dependencyNode.appendNode('version', dep.version)
+                dependencyNode.appendNode('scope', scope)
 
-                    if (!dep.transitive) {
-                        // If this dependency is transitive, we should force exclude all its dependencies them from the POM
-                        final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-                        exclusionNode.appendNode('groupId', '*')
-                        exclusionNode.appendNode('artifactId', '*')
-                    } else if (!dep.properties.excludeRules.empty) {
-                        // Otherwise add specified exclude rules
-                        final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
-                        dep.properties.excludeRules.each { ExcludeRule rule ->
-                            exclusionNode.appendNode('groupId', rule.group ?: '*')
-                            exclusionNode.appendNode('artifactId', rule.module ?: '*')
-                        }
+                if (!dep.transitive) {
+                    // If this dependency is transitive, we should force exclude all its dependencies them from the POM
+                    final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                    exclusionNode.appendNode('groupId', '*')
+                    exclusionNode.appendNode('artifactId', '*')
+                } else if (!dep.properties.excludeRules.empty) {
+                    // Otherwise add specified exclude rules
+                    final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                    dep.properties.excludeRules.each { ExcludeRule rule ->
+                        exclusionNode.appendNode('groupId', rule.group ?: '*')
+                        exclusionNode.appendNode('artifactId', rule.module ?: '*')
                     }
                 }
-
-                // List all "compile" dependencies (for old Gradle)
-                configurations.compile.getAllDependencies().each { dep -> addDependency(dep, "compile") }
-                // List all "api" dependencies (for new Gradle) as "compile" dependencies
-                configurations.api.getAllDependencies().each { dep -> addDependency(dep, "compile") }
-                // List all "implementation" dependencies (for new Gradle) as "runtime" dependencies
-                configurations.implementation.getAllDependencies().each { dep -> addDependency(dep, "runtime") }
             }
+
+            // List all "compile" dependencies (for old Gradle)
+            configurations.compile.getAllDependencies().each { dep -> addDependency(dep, "compile") }
+            // List all "api" dependencies (for new Gradle) as "compile" dependencies
+            configurations.api.getAllDependencies().each { dep -> addDependency(dep, "compile") }
+            // List all "implementation" dependencies (for new Gradle) as "runtime" dependencies
+            configurations.implementation.getAllDependencies().each { dep -> addDependency(dep, "runtime") }
         }
     }
 }
