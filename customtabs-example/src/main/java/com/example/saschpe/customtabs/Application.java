@@ -16,7 +16,7 @@
 
 package com.example.saschpe.customtabs;
 
-import android.support.v7.app.AppCompatDelegate;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import saschpe.android.customtabs.CustomTabsActivityLifecycleCallbacks;
 
