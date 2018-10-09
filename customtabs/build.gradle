@@ -15,8 +15,8 @@
  */
 
 plugins {
-    id 'com.github.dcendents.android-maven' version '2.0'
-    id 'com.jfrog.bintray' version '1.8.0'
+    id 'com.jfrog.bintray' version '1.8.4'
+    id 'maven-publish'
 }
 
 def localPropertiesFile = rootProject.file('local.properties')
@@ -63,26 +63,92 @@ dependencies {
 group = 'saschpe.android'
 version = android.defaultConfig.versionName
 
-ext {
-    siteUrl = 'https://github.com/saschpe/android-customtabs'
-    gitUrl = 'https://github.com/saschpe/android-customtabs.git'
-    descr = 'Chrome CustomTabs for Android simplified.'
+task androidJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    android.libraryVariants.all { variant ->
+        if (variant.name == 'release') {
+            owner.classpath += variant.javaCompile.classpath
+        }
+    }
+    exclude '**/R.html', '**/R.*.html', '**/index.html'
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+afterEvaluate { // https://groups.google.com/forum/#!topic/adt-dev/kzbEHAGbFVg
+    publishing.publications {
+        mavenAndroid(MavenPublication) {
+            groupId
+            artifactId project.name
+            version this.version
+
+            artifact bundleReleaseAar
+            artifact androidJavadocsJar
+            artifact androidSourcesJar
+
+            pom.withXml {
+                final dependenciesNode = asNode().appendNode('dependencies')
+
+                ext.addDependency = { Dependency dep, String scope ->
+                    if (dep.group == null || dep.version == null || dep.name == null || dep.name == "unspecified")
+                        return // ignore invalid dependencies
+
+                    final dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', dep.group)
+                    dependencyNode.appendNode('artifactId', dep.name)
+                    dependencyNode.appendNode('version', dep.version)
+                    dependencyNode.appendNode('scope', scope)
+
+                    if (!dep.transitive) {
+                        // If this dependency is transitive, we should force exclude all its dependencies them from the POM
+                        final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                        exclusionNode.appendNode('groupId', '*')
+                        exclusionNode.appendNode('artifactId', '*')
+                    } else if (!dep.properties.excludeRules.empty) {
+                        // Otherwise add specified exclude rules
+                        final exclusionNode = dependencyNode.appendNode('exclusions').appendNode('exclusion')
+                        dep.properties.excludeRules.each { ExcludeRule rule ->
+                            exclusionNode.appendNode('groupId', rule.group ?: '*')
+                            exclusionNode.appendNode('artifactId', rule.module ?: '*')
+                        }
+                    }
+                }
+
+                // List all "compile" dependencies (for old Gradle)
+                configurations.compile.getAllDependencies().each { dep -> addDependency(dep, "compile") }
+                // List all "api" dependencies (for new Gradle) as "compile" dependencies
+                configurations.api.getAllDependencies().each { dep -> addDependency(dep, "compile") }
+                // List all "implementation" dependencies (for new Gradle) as "runtime" dependencies
+                configurations.implementation.getAllDependencies().each { dep -> addDependency(dep, "runtime") }
+            }
+        }
+    }
 }
 
 bintray {
     user = project.properties["bintray.user"]
     key = project.properties["bintray.apikey"]
-
-    configurations = ['archives'] //When uploading configuration files
+    publications = ['mavenAndroid']
+    configurations = ['archives']
+    override = true
     pkg {
         repo = 'maven'
         name = 'android-customtabs'
         userOrg = 'saschpe'
-        websiteUrl = siteUrl
+        websiteUrl = 'https://github.com/saschpe/android-customtabs'
         issueTrackerUrl = 'https://github.com/saschpe/android-customtabs/issues'
-        vcsUrl = gitUrl
+        vcsUrl = 'https://github.com/saschpe/android-customtabs.git'
         licenses = ['Apache-2.0']
-        desc = descr
+        desc = 'Chrome CustomTabs for Android simplified.'
         labels = ['aar', 'android']
         publish = true
         publicDownloadNumbers = true
@@ -91,65 +157,13 @@ bintray {
         githubReleaseNotesFile = 'README.md'
 
         version {
-            name = android.defaultConfig.versionName
-            desc = descr
+            name = this.version
+            desc = "${project.name} ${this.version}"
+            released = new Date()
+            vcsTag = this.version
             gpg {
                 sign = true
             }
         }
     }
-}
-
-task createPom {
-    pom {
-        project {
-            packaging 'aar'
-
-            name project.name
-            description descr
-            url siteUrl
-            inceptionYear '2017'
-
-            licenses {
-                license {
-                    name 'The Apache Software License, Version 2.0'
-                    url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                }
-            }
-            scm {
-                connection gitUrl
-                developerConnection gitUrl
-                url siteUrl
-            }
-            developers {
-                developer {
-                    id 'saschpe'
-                    name 'Sascha Peilicke'
-                    email 'sascha@peilicke.de'
-                }
-            }
-        }
-    }.writeTo("$buildDir/poms/pom-default.xml").writeTo("pom.xml")
-}
-build.dependsOn createPom
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-
-task javadoc(type: Javadoc) {
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-    failOnError false
-}
-
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-artifacts {
-    archives javadocJar
-    archives sourcesJar
 }
