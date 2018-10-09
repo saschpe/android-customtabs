@@ -24,7 +24,7 @@ import org.robolectric.annotation.Config;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
@@ -36,7 +36,7 @@ public final class CustomTabsPackageHelperTest {
         String packageName = CustomTabsPackageHelper.getPackageNameToUse(RuntimeEnvironment.application);
 
         // Assert
-        assertEquals(null, packageName);
+        assertNull(packageName);
     }
 
     @Test

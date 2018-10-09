@@ -29,7 +29,7 @@ import static org.mockito.Mockito.mock;
 @RunWith(JUnit4.class)
 public class KeepAliveServiceTest {
     // Arrange
-    private Intent mockIntent = mock(Intent.class);
+    private final Intent mockIntent = mock(Intent.class);
 
     @Test
     public void onBind_returnsValidBinder() {
