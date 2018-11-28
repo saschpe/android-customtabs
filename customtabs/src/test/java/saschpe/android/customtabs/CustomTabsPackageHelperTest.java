@@ -18,22 +18,21 @@ package saschpe.android.customtabs;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
 
 import java.util.List;
+
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 27)
+@RunWith(AndroidJUnit4.class)
 public final class CustomTabsPackageHelperTest {
     @Test
     public void getPackageNameToUse_noMockingReturnsNull() {
         // Arrange, act
-        String packageName = CustomTabsPackageHelper.getPackageNameToUse(RuntimeEnvironment.application);
+        String packageName = CustomTabsPackageHelper.getPackageNameToUse(ApplicationProvider.getApplicationContext());
 
         // Assert
         assertNull(packageName);

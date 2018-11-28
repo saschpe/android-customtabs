@@ -36,10 +36,6 @@ allprojects {
     }
 }
 
-ext {
-    robolectricVersion = '3.8'
-}
-
 task clean(type: Delete) {
     delete rootProject.buildDir
 }

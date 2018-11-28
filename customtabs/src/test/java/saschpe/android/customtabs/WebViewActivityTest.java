@@ -23,15 +23,14 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
+
+import androidx.test.core.app.ApplicationProvider;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(RobolectricTestRunner.class)
+@RunWith(AndroidJUnit4.class)
 @Ignore
-@Config(constants = BuildConfig.class, sdk = 27)
 public final class WebViewActivityTest {
     private static final String TEST_URL = "http://sascha.peilicke.de";
     private static final String TEST_TITLE = "Sascha Peilicke";
@@ -40,7 +39,7 @@ public final class WebViewActivityTest {
     @Before
     public void setupActivity() {
         // Arrange
-        Intent intent = new Intent(RuntimeEnvironment.application, WebViewActivity.class)
+        Intent intent = new Intent(ApplicationProvider.getApplicationContext(), WebViewActivity.class)
                 .putExtra(WebViewActivity.EXTRA_TITLE, TEST_TITLE)
                 .putExtra(WebViewActivity.EXTRA_URL, TEST_URL);
 
