@@ -22,8 +22,8 @@ import android.net.Uri;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -31,8 +31,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 27)
+@RunWith(AndroidJUnit4.class)
 public final class WebViewFallbackTest {
     private static final String GITHUB_PAGE = "https://github.com/saschpe/android-customtabs/";
 
