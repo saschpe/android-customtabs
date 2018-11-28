@@ -19,3 +19,5 @@ Thumbs.db
 
 # Maven deployer
 pom.xml
+
+buildSrc/src/main/kotlin/Secrets.kt

@@ -14,5 +14,7 @@
  * limitations under the License.
  */
 
-include ':customtabs'
-include ':customtabs-example'
+rootProject.name = "android-customtabs"
+
+include(":customtabs")
+include(":customtabs-example")
