@@ -1,46 +1,52 @@
 #!/bin/bash
 #
-# Script to create a new Android versionName commit
+# Script to create a version bump commit.
+#
+# Increases the version
 #
 # Semantic Versioning: MAJOR.MINOR.PATCH
 
-. "scripts/inc.functions.sh"
+. 'scripts/inc.functions.sh'
 
-if [ $# -ne 1 ] ; then
-    die "Usage: $0 [VERSION]\n\n\tExample: $0 0.0.1"
+if [[ $# -ne 1 ]] ; then
+    die "Usage: $0 [VERSION_NAME]\n\n\tExample: $0 0.0.1"
 fi
 
-#APP_GRADLE="app/build.gradle"
-LIB_GRADLE="customtabs/build.gradle"
-README="README.md"
 
-# Increase SDK version (used as versionName in most modules)
-OLD_VERSION=$(get_version_name $LIB_GRADLE)
-NEW_VERSION=$1
-if version_gt $OLD_VERSION_NAME $NEW_VERSION_NAME; then
-    die "Error: We are already at version $OLD_VERSION"
+function get_version_name {
+    echo $(grep "versionName = \"" $1 | cut -d"\"" -f2)
+}
+
+function get_version_code {
+    echo $(grep "versionCode " $1 | cut -d" " -f11) # VERY FLAKY!
+}
+
+
+LIBRARY_GRADLE="customtabs/build.gradle.kts"
+MOBILE_GRADLE="customtabs-example/build.gradle.kts"
+
+# Increase version name
+OLD_VERSION_NAME=$(get_version_name ${LIBRARY_GRADLE})
+NEW_VERSION_NAME=$1
+if [[ "$NEW_VERSION_NAME" < "$OLD_VERSION_NAME" || \
+     "$NEW_VERSION_NAME" = "$OLD_VERSION_NAME" ]] ; then
+    die "Error: We are already at version $OLD_VERSION_NAME"
 fi
+sed -i -e "s|versionName = \"$OLD_VERSION_NAME|versionName = \"$NEW_VERSION_NAME|" \
+    ${LIBRARY_GRADLE} ${MOBILE_GRADLE}
 
-# Replace versionName in gradle files
-#sed -i -e "s|versionName '$OLD_VERSION|versionName '$NEW_VERSION|" $APP_GRADLE
-sed -i -e "s|versionName '$OLD_VERSION|versionName '$NEW_VERSION|" $LIB_GRADLE
-# Replace in README.md
-sed -i \
-    -e "s|saschpe.android:customtabs:$OLD_VERSION|saschpe.android:customtabs:$NEW_VERSION|" \
-    -e "s|%3A${OLD_VERSION}|%3A${NEW_VERSION}|" \
-    $README
+# Bump mobile app version code for Google's Play Store
+for gradle in ${MOBILE_GRADLE} ; do
+    OLD_VERSION_CODE=$(get_version_code ${gradle})
+    NEW_VERSION_CODE=$(($OLD_VERSION_CODE+1))
+    sed -i -e "s/versionCode = $OLD_VERSION_CODE/versionCode = $NEW_VERSION_CODE/" \
+        ${gradle}
+done
 
-## Take version code from app gradle
-#OLD_VERSION_CODE=$(get_version_code $APP_GRADLE)
-#NEW_VERSION_CODE=$(($OLD_VERSION_CODE+1))
-## Bump version code for Google's Play Store
-#sed -i -e "s/versionCode $OLD_VERSION_CODE/versionCode $NEW_VERSION_CODE/" $APP_GRADLE
 
-# Create a commit with appropriate git tag
+# Create a commit with appropriate tag
 git commit \
-    $LIB_GRADLE \
-    $README \
-    -m "Bump to version $NEW_VERSION"
-#   $APP_GRADLE \
-# -m "Bump to version $NEW_VERSION (examples version code $NEW_VERSION_CODE)"
-git tag release/$NEW_VERSION
+    ${LIBRARY_GRADLE} \
+    ${MOBILE_GRADLE} \
+    -m "Bump to version $NEW_VERSION_NAME"
+git tag release/${NEW_VERSION_NAME}

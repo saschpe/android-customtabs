@@ -14,27 +14,29 @@
  * limitations under the License.
  */
 
-apply plugin: 'com.android.application'
+plugins {
+    id("com.android.application")
+}
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion(28)
 
     defaultConfig {
-        applicationId 'com.example.saschpe.customtabs'
-        minSdkVersion 17
-        targetSdkVersion 28
-        versionCode 170112
-        versionName '1.1.2'
-        archivesBaseName = "${applicationId}-${versionName}"
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        applicationId = "com.example.saschpe.customtabs"
+        minSdkVersion(17)
+        targetSdkVersion(28)
+        versionCode = 170201
+        versionName = "2.0.1"
+        base.archivesBaseName = "$applicationId-$versionName"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
 }
 
 dependencies {
-    implementation project(':customtabs')
-    implementation 'androidx.browser:browser:1.0.0'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.0.0'
-    implementation 'com.google.android.material:material:1.0.0'
+    implementation(project(":customtabs"))
+    implementation("androidx.browser:browser:1.0.0")
+    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+    implementation("androidx.vectordrawable:vectordrawable-animated:1.0.0")
+    implementation("com.google.android.material:material:1.0.0")
 }
