@@ -16,6 +16,8 @@
 
 plugins {
     id("com.android.application")
+    kotlin("android")
+    kotlin("android.extensions")
 }
 
 android {
@@ -31,9 +33,17 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
+
+    sourceSets {
+        // Increase Android Studio Kotlin compatibility
+        findByName("androidTest")?.java?.srcDirs("src/androidTest/kotlin")
+        findByName("main")?.java?.srcDirs("src/main/kotlin")
+        findByName("test")?.java?.srcDirs("src/test/kotlin")
+    }
 }
 
 dependencies {
+    implementation(kotlin("stdlib-jdk8", version = "1.3.10"))
     implementation(project(":customtabs"))
     implementation("androidx.browser:browser:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
