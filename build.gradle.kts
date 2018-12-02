@@ -26,6 +26,7 @@ buildscript {
 }
 
 plugins {
+    id("com.diffplug.gradle.spotless") version "3.16.0"
     id("com.github.ben-manes.versions") version "0.20.0"
 }
 
@@ -33,5 +34,29 @@ allprojects {
     repositories {
         google()
         jcenter()
+    }
+}
+
+spotless {
+    format("misc") {
+        target("**/*.gradle", "**/*.md", "**/.gitignore")
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+    freshmark {
+        propertiesFile("gradle.properties")
+    }
+    java {
+        target("**/*.java")
+        trimTrailingWhitespace()
+        removeUnusedImports()
+    }
+    kotlin {
+        target("*/src/**/*.kt")
+        ktlint("0.29.0")
+    }
+    kotlinGradle {
+        target("**/*.gradle.kts")
+        ktlint("0.29.0")
     }
 }
