@@ -146,7 +146,7 @@ bintray {
         version(delegateClosureOf<BintrayExtension.VersionConfig> {
             name = project.version as String
             desc = "${project.name} ${project.version as String}"
-            //released = java.util.Date()
+            // released = java.util.Date()
             vcsTag = project.version as String
 
             gpg(delegateClosureOf<BintrayExtension.GpgConfig> {
