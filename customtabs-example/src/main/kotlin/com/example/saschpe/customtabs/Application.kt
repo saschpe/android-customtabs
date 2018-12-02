@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package com.example.saschpe.customtabs;
+package com.example.saschpe.customtabs
 
-import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.app.AppCompatDelegate
 
-import saschpe.android.customtabs.CustomTabsActivityLifecycleCallbacks;
+import saschpe.android.customtabs.CustomTabsActivityLifecycleCallbacks
 
 /**
  * Optional pre-loading for improved performance
  */
-public final class Application extends android.app.Application {
-    @Override
-    public void onCreate() {
-        super.onCreate();
+class Application : android.app.Application() {
+    override fun onCreate() {
+        super.onCreate()
 
         // Support vector drawable support for pre-Lollipop devices
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true)
 
         // Preload custom tabs service for improved performance
         // This is optional but recommended
-        registerActivityLifecycleCallbacks(new CustomTabsActivityLifecycleCallbacks());
+        registerActivityLifecycleCallbacks(CustomTabsActivityLifecycleCallbacks())
     }
 }
