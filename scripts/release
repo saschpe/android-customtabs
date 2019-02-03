@@ -6,13 +6,14 @@
 #
 # Semantic Versioning: MAJOR.MINOR.PATCH
 
-. 'scripts/inc.functions.sh'
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+. "${SCRIPT_DIR}/inc.functions.sh"
 
-if [[ $# -ne 1 ]] ; then
-    die "Usage: $0 [VERSION_NAME]\n\n\tExample: $0 0.0.1"
-fi
+# Constants
+LIBRARY_GRADLE="customtabs/build.gradle.kts"
+MOBILE_GRADLE="customtabs-example/build.gradle.kts"
 
-
+# Functions
 function get_version_name {
     echo $(grep "versionName = \"" $1 | cut -d"\"" -f2)
 }
@@ -21,9 +22,12 @@ function get_version_code {
     echo $(grep "versionCode " $1 | cut -d" " -f11) # VERY FLAKY!
 }
 
+function usage {
+    die "Usage: $0 [VERSION_NAME]\n\n\tExample: $0 0.0.1"
+}
 
-LIBRARY_GRADLE="customtabs/build.gradle.kts"
-MOBILE_GRADLE="customtabs-example/build.gradle.kts"
+# Checks
+[ $# -eq 1 ] || usage
 
 # Increase version name
 OLD_VERSION_NAME=$(get_version_name ${LIBRARY_GRADLE})
