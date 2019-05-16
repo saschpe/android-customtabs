@@ -60,7 +60,7 @@ dependencies {
 }
 
 group = "saschpe.android"
-version = android.defaultConfig.versionName
+version = android.defaultConfig.versionName.toString()
 
 val androidJavadoc by tasks.creating(Javadoc::class) {
     source = android.sourceSets.getByName("main").java.sourceFiles
@@ -68,8 +68,7 @@ val androidJavadoc by tasks.creating(Javadoc::class) {
 
     android.libraryVariants.all { variant ->
         if (variant.name == "release") {
-            @Suppress("DEPRECATION")
-            classpath += variant.javaCompile.classpath
+            variant.javaCompile?.classpath?.let { classpath += it }
         }
         true
     }
@@ -77,13 +76,13 @@ val androidJavadoc by tasks.creating(Javadoc::class) {
 }
 
 val androidJavadocJar by tasks.creating(Jar::class) {
-    classifier = "javadoc"
+    archiveClassifier.set("javadoc")
     from(androidJavadoc.destinationDir)
 }
 androidJavadocJar.dependsOn(androidJavadoc)
 
 val androidSourcesJar by tasks.creating(Jar::class) {
-    classifier = "sources"
+    archiveClassifier.set("sources")
     from(android.sourceSets.getByName("main").java.srcDirs)
 }
 
@@ -109,11 +108,11 @@ publishing.publications {
         pom.withXml({
             asNode().appendNode("dependencies").let { dependencies ->
                 // List all "api" dependencies as "compile" dependencies
-                configurations.api.allDependencies.forEach {
+                configurations.api.get().allDependencies.forEach {
                     dependencies.addDependency(it, "compile")
                 }
                 // List all "implementation" dependencies as "runtime" dependencies
-                configurations.implementation.allDependencies.forEach {
+                configurations.implementation.get().allDependencies.forEach {
                     dependencies.addDependency(it, "runtime")
                 }
             }
