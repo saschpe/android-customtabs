@@ -52,11 +52,11 @@ dependencies {
     api("androidx.appcompat:appcompat:1.0.2")
     api("androidx.browser:browser:1.0.0")
 
-    testImplementation("androidx.test:core:1.0.0")
-    testImplementation("androidx.test.ext:junit:1.0.0")
+    testImplementation("androidx.test:core:1.1.0")
+    testImplementation("androidx.test.ext:junit:1.1.0")
     testImplementation("junit:junit:4.12")
-    testImplementation("org.robolectric:robolectric:4.0.2")
-    testImplementation("org.mockito:mockito-core:2.23.4")
+    testImplementation("org.robolectric:robolectric:4.2")
+    testImplementation("org.mockito:mockito-core:2.27.0")
 }
 
 group = "saschpe.android"
