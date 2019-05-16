@@ -34,6 +34,15 @@ android {
         vectorDrawables.useSupportLibrary = true
     }
 
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("debug")
+        }
+    }
+
     sourceSets {
         // Increase Android Studio Kotlin compatibility
         findByName("androidTest")?.java?.srcDirs("src/androidTest/kotlin")
