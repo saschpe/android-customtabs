@@ -17,12 +17,15 @@ val ensureSecretsExist: Task by tasks.creating {
 
     doFirst {
         if (!secretFile.exists()) {
-            secretFile.writeText("object Secrets {\n" +
-                    "    object Bintray {\n" +
-                    "        val user = \"\"\n" +
-                    "        val apiKey = \"\"\n" +
-                    "    }\n" +
-                    "}")
+            secretFile.writeText(
+                """
+object Secrets {
+    object Bintray {
+        const val user = ""
+        const val apiKey = ""
+    }
+}""".trimIndent()
+            )
         }
     }
 }
