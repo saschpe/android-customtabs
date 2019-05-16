@@ -1,56 +1,80 @@
 #!/bin/bash
 #
-# Script to create a version bump commit.
+# Script to create a release commit.
 #
-# Increases the version
+# Increases the version name and version code of an Android app,
+# commits and tags the result.
 #
-# Semantic Versioning: MAJOR.MINOR.PATCH
+# Based of semantic versioning: MAJOR.MINOR.PATCH
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 . "${SCRIPT_DIR}/inc.functions.sh"
 
 # Constants
-LIBRARY_GRADLE="customtabs/build.gradle.kts"
-MOBILE_GRADLE="customtabs-example/build.gradle.kts"
+GRADLE_FILES=(
+    customtabs/build.gradle.kts
+    customtabs-example/build.gradle.kts
+)
+
 
 # Functions
-function get_version_name {
-    echo $(grep "versionName = \"" $1 | cut -d"\"" -f2)
+function get_version_code {
+    echo $(grep "versionCode = " $1 | xargs | cut -d"=" -f2)
 }
 
-function get_version_code {
-    echo $(grep "versionCode " $1 | cut -d" " -f11) # VERY FLAKY!
+function get_version_name {
+    echo $(grep "versionName = " $1 | xargs | cut -d"=" -f2)
 }
 
 function usage {
-    die "Usage: $0 [VERSION_NAME]\n\n\tExample: $0 0.0.1"
+    echo -e "Usage: $0 [VERSION_NAME]\n\n  Example: $0 0.0.1"
+    exit 1
+}
+
+function version_gt() {
+    test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
 }
 
 # Checks
-[ $# -eq 1 ] || usage
+if [[ $# -ne 1 ]] ; then
+    usage
+fi
+
 
 # Increase version name
-OLD_VERSION_NAME=$(get_version_name ${LIBRARY_GRADLE})
-NEW_VERSION_NAME=$1
-if [[ "$NEW_VERSION_NAME" < "$OLD_VERSION_NAME" || \
-     "$NEW_VERSION_NAME" = "$OLD_VERSION_NAME" ]] ; then
-    die "Error: We are already at version $OLD_VERSION_NAME"
-fi
-sed -i -e "s|versionName = \"$OLD_VERSION_NAME|versionName = \"$NEW_VERSION_NAME|" \
-    ${LIBRARY_GRADLE} ${MOBILE_GRADLE}
+version_name_new=$1
+# Split new version name into major, minor, patch and pad each number to two
+# digits to ensure we can safely switch from 1.9.0 to 1.10.0. Padded, the
+# latter would yield '011000' as the new version code. The result has a length
+# of six digits.
+IFS='.' read -r -a version_name_new_array <<< "${version_name_new}"
 
-# Bump mobile app version code for Google's Play Store
-for gradle in ${MOBILE_GRADLE} ; do
-    OLD_VERSION_CODE=$(get_version_code ${gradle})
-    NEW_VERSION_CODE=$(($OLD_VERSION_CODE+1))
-    sed -i -e "s/versionCode = $OLD_VERSION_CODE/versionCode = $NEW_VERSION_CODE/" \
-        ${gradle}
+for gradle_file in ${GRADLE_FILES[@]} ; do
+    version_name_old=$(get_version_name ${gradle_file})
+    # To be able to compare with the previous version, do the same for the old
+    # version name.
+    IFS='.' read -r -a version_name_old_array <<< "${version_name_old}"
+
+    if version_gt ${version_name_old} ${version_name_new}; then
+        die "Already at version ${version_name_old}"
+    fi
+
+    # Since we're otherwise fine, start changing the version name..
+    sed2 "s|versionName = \"${version_name_old}|versionName = \"${version_name_new}|" ${gradle_file}
+
+    # Increment app version code for Google's Play Store (not applicable for libraries)
+    version_code_old=$(get_version_code ${gradle_file})
+    if [ -n "${version_code_old}" ] ; then
+        padded_sem_ver=$(printf "%02d%02d%02d\n" ${version_name_new_array[0]} ${version_name_new_array[1]} ${version_name_new_array[2]})
+        # Replace the last six digits with the new padded semantic version
+        version_code_new=${version_code_old::${#version_code_old}-6}${padded_sem_ver}
+        sed2 "s/versionCode = ${version_code_old}/versionCode = ${version_code_new}/" ${gradle_file}
+    fi
+
+    git_commit_files="${git_commit_files} ${gradle_file}"
 done
 
-
 # Create a commit with appropriate tag
-git commit \
-    ${LIBRARY_GRADLE} \
-    ${MOBILE_GRADLE} \
-    -m "Bump to version $NEW_VERSION_NAME"
-git tag release/${NEW_VERSION_NAME}
+git_commit_message="Release version ${version_name_new}"
+safe git commit --signoff ${git_commit_files} -m "${git_commit_message}"
+safe git tag -f release/${version_name_new}

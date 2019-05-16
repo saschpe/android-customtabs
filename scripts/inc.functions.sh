@@ -25,7 +25,14 @@ function safe {
     "$@"
     local status=$?
     if [[ ${status} -ne 0 ]]; then
-        die "\nBUILD FAILED\nWhen invoking \"$@\"\n" >&2
+        die "\nBUILD FAILED\nAfter invoking \"$@\"\n" >&2
     fi
     return ${status}
+}
+
+function sed2 {
+    sed -i'.bak' "$1" ${@:2}
+    for file in "${@:2}" ; do
+        rm "${file}.bak"
+    done
 }
