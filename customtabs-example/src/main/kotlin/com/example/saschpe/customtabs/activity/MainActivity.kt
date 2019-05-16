@@ -44,11 +44,10 @@ class MainActivity : AppCompatActivity() {
         get() {
             val builder = CustomTabsIntent.Builder()
                     .addDefaultShareMenuItem()
-                    .setToolbarColor(this.resources.getColor(R.color.colorPrimary))
+                    .setToolbarColor(resources.getColor(R.color.colorPrimary))
                     .setShowTitle(true)
-            val backArrow = getBitmapFromVectorDrawable(R.drawable.ic_arrow_back_white_24dp)
-            if (backArrow != null) {
-                builder.setCloseButtonIcon(backArrow)
+            getBitmapFromVectorDrawable(R.drawable.ic_arrow_back_white_24dp)?.let {
+                builder.setCloseButtonIcon(it)
             }
             return builder
         }

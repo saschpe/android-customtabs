@@ -27,7 +27,7 @@ buildscript {
 }
 
 plugins {
-    id("com.diffplug.gradle.spotless") version "3.16.0"
+    id("com.diffplug.gradle.spotless") version "3.23.0"
     id("com.github.ben-manes.versions") version "0.21.0"
 }
 
@@ -54,10 +54,10 @@ spotless {
     }
     kotlin {
         target("*/src/**/*.kt")
-        ktlint("0.29.0")
+        ktlint()
     }
     kotlinGradle {
         target("**/*.gradle.kts")
-        ktlint("0.29.0")
+        ktlint()
     }
 }

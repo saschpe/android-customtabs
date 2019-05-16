@@ -17,7 +17,6 @@
 package com.example.saschpe.customtabs
 
 import androidx.appcompat.app.AppCompatDelegate
-
 import saschpe.android.customtabs.CustomTabsActivityLifecycleCallbacks
 
 /**
