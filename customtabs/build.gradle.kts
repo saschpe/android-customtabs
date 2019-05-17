@@ -23,6 +23,11 @@ plugins {
     `maven-publish`
 }
 
+repositories {
+    google()
+    jcenter()
+}
+
 android {
     compileSdkVersion(28)
 

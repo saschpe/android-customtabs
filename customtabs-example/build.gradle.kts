@@ -20,6 +20,11 @@ plugins {
     kotlin("android.extensions")
 }
 
+repositories {
+    google()
+    jcenter()
+}
+
 android {
     compileSdkVersion(28)
 
