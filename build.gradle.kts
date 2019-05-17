@@ -22,7 +22,7 @@ buildscript {
 
     dependencies {
         classpath(kotlin("gradle-plugin", "1.3.31"))
-        classpath("com.android.tools.build:gradle:3.2.1")
+        classpath("com.android.tools.build:gradle:3.4.1")
     }
 }
 
