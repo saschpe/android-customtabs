@@ -57,7 +57,7 @@ android {
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8", "1.3.31"))
+    implementation(kotlin("stdlib-jdk8", "1.3.61"))
     implementation(project(":customtabs"))
     implementation("androidx.browser:browser:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
