@@ -25,6 +25,7 @@ import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.example.saschpe.customtabs.R
 import kotlinx.android.synthetic.main.activity_main.fab
@@ -43,9 +44,9 @@ class MainActivity : AppCompatActivity() {
     private val defaultCustomTabsIntentBuilder: CustomTabsIntent.Builder
         get() {
             val builder = CustomTabsIntent.Builder()
-                    .addDefaultShareMenuItem()
-                    .setToolbarColor(resources.getColor(R.color.colorPrimary))
-                    .setShowTitle(true)
+                .addDefaultShareMenuItem()
+                .setToolbarColor(ResourcesCompat.getColor(resources, R.color.colorPrimary, null))
+                .setShowTitle(true)
             getBitmapFromVectorDrawable(R.drawable.ic_arrow_back_white_24dp)?.let {
                 builder.setCloseButtonIcon(it)
             }
@@ -68,14 +69,19 @@ class MainActivity : AppCompatActivity() {
     private fun startGitHubProjectCustomTab() {
         // Apply some fancy animation to show off
         val customTabsIntent = defaultCustomTabsIntentBuilder
-                .setStartAnimations(this, R.anim.slide_in_right, R.anim.slide_out_left)
-                .setExitAnimations(this, R.anim.slide_in_left, R.anim.slide_out_right)
-                .build()
+            .setStartAnimations(this, R.anim.slide_in_right, R.anim.slide_out_left)
+            .setExitAnimations(this, R.anim.slide_in_left, R.anim.slide_out_right)
+            .build()
 
         CustomTabsHelper.addKeepAliveExtra(this, customTabsIntent.intent)
 
         // This is where the magic happens...
-        CustomTabsHelper.openCustomTab(this, customTabsIntent, Uri.parse(GITHUB_PAGE), WebViewFallback())
+        CustomTabsHelper.openCustomTab(
+            this,
+            customTabsIntent,
+            Uri.parse(GITHUB_PAGE),
+            WebViewFallback()
+        )
     }
 
     /**
@@ -90,8 +96,10 @@ class MainActivity : AppCompatActivity() {
             drawable = DrawableCompat.wrap(drawable).mutate()
         }
 
-        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth,
-                drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(
+            drawable.intrinsicWidth,
+            drawable.intrinsicHeight, Bitmap.Config.ARGB_8888
+        )
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.width, canvas.height)
         drawable.draw(canvas)
