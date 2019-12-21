@@ -33,7 +33,7 @@ android {
     compileSdkVersion(29)
 
     defaultConfig {
-        minSdkVersion(15)
+        minSdkVersion(16)
         targetSdkVersion(29)
         versionName = "2.0.3"
     }
@@ -46,16 +46,23 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions.jvmTarget = "1.8"
+
     testOptions {
         unitTests.isIncludeAndroidResources = true
     }
 }
 
 dependencies {
-    api("androidx.browser:browser:1.0.0")
+    api("androidx.browser:browser:1.2.0")
 
     implementation("androidx.appcompat:appcompat:1.1.0")
-    implementation(kotlin("stdlib", "1.3.61"))
+    implementation(kotlin("stdlib-jdk8", "1.3.61"))
 
     testImplementation("androidx.test:core:1.2.0")
     testImplementation("androidx.test.ext:junit:1.1.1")

@@ -79,7 +79,7 @@ class CustomTabsHelper {
             return
         }
         val packageName = getPackageNameToUse(activity!!) ?: return
-        connection = object : CustomTabsServiceConnection() {
+        val myConnection = object : CustomTabsServiceConnection() {
             override fun onCustomTabsServiceConnected(
                 name: ComponentName,
                 newClient: CustomTabsClient
@@ -101,10 +101,11 @@ class CustomTabsHelper {
                 connectionCallback?.onCustomTabsDisconnected()
             }
         }
-        CustomTabsClient.bindCustomTabsService(activity, packageName, connection)
+        connection = myConnection
+        CustomTabsClient.bindCustomTabsService(activity, packageName, myConnection)
     }
 
-    fun mayLaunchUrl(uri: Uri?, extras: Bundle?, otherLikelyBundles: List<Bundle?>?) =
+    fun mayLaunchUrl(uri: Uri, extras: Bundle?, otherLikelyBundles: List<Bundle?>?) =
         when (client) {
             null -> false
             else -> session?.mayLaunchUrl(uri, extras, otherLikelyBundles) ?: false
@@ -152,7 +153,7 @@ class CustomTabsHelper {
         fun openCustomTab(
             context: Context,
             customTabsIntent: CustomTabsIntent,
-            uri: Uri?,
+            uri: Uri,
             fallback: CustomTabFallback?
         ) {
             val packageName = getPackageNameToUse(context)

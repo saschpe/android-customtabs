@@ -48,13 +48,19 @@ android {
         }
     }
 
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions.jvmTarget = "1.8"
+
     sourceSets.forEach { it.java.srcDir("src/${it.name}/kotlin") }
 }
 
 dependencies {
     implementation(kotlin("stdlib", "1.3.61"))
     implementation(project(":customtabs"))
-    implementation("androidx.browser:browser:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     implementation("androidx.vectordrawable:vectordrawable-animated:1.1.0")
     implementation("com.google.android.material:material:1.0.0")
