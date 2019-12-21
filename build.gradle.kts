@@ -26,7 +26,7 @@ buildscript {
 
 plugins {
     id("com.diffplug.gradle.spotless") version "3.26.1"
-    id("com.github.ben-manes.versions") version "0.21.0"
+    id("com.github.ben-manes.versions") version "0.27.0"
     kotlin("jvm") version "1.3.61"
 }
 
@@ -50,5 +50,13 @@ spotless {
     kotlinGradle {
         target("**/*.gradle.kts")
         ktlint()
+    }
+}
+
+tasks.withType<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask> {
+    rejectVersionIf {
+        fun isStable(version: String) = Regex("^[0-9,.v-]+(-r)?$").matches(version)
+
+        !isStable(candidate.version) && isStable(currentVersion)
     }
 }
