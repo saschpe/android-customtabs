@@ -38,9 +38,8 @@ android {
     }
 
     buildTypes {
-        getByName("debug") {
-        }
-        getByName("release") {
+        named("debug") {}
+        named("release") {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
@@ -71,7 +70,7 @@ val androidJavadoc by tasks.creating(Javadoc::class) {
 
     android.libraryVariants.all { variant ->
         if (variant.name == "release") {
-            variant.javaCompile?.classpath?.let { classpath += it }
+            variant.javaCompile.classpath?.let { classpath += it }
         }
         true
     }
@@ -104,11 +103,11 @@ publishing.publications {
         artifactId = project.name
         version = project.version as String
 
-        afterEvaluate({ artifact(tasks.getByName("bundleReleaseAar")) })
+        afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
         artifact(androidJavadocJar)
         artifact(androidSourcesJar)
 
-        pom.withXml({
+        pom.withXml {
             asNode().appendNode("dependencies").let { dependencies ->
                 // List all "api" dependencies as "compile" dependencies
                 configurations.api.get().allDependencies.forEach {
@@ -119,7 +118,7 @@ publishing.publications {
                     dependencies.addDependency(it, "runtime")
                 }
             }
-        })
+        }
     }
 }
 

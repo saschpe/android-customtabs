@@ -40,7 +40,7 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
+        named("release") {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
@@ -48,12 +48,7 @@ android {
         }
     }
 
-    sourceSets {
-        // Increase Android Studio Kotlin compatibility
-        findByName("androidTest")?.java?.srcDirs("src/androidTest/kotlin")
-        findByName("main")?.java?.srcDirs("src/main/kotlin")
-        findByName("test")?.java?.srcDirs("src/test/kotlin")
-    }
+    sourceSets.forEach { it.java.srcDir("src/${it.name}/kotlin") }
 }
 
 dependencies {

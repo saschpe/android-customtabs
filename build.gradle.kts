@@ -18,7 +18,6 @@ buildscript {
     repositories {
         google()
     }
-
     dependencies {
         classpath("com.android.tools.build:gradle:3.5.3")
     }
