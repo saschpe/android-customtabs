@@ -26,7 +26,7 @@ buildscript {
 }
 
 plugins {
-    id("com.diffplug.gradle.spotless") version "3.23.0"
+    id("com.diffplug.gradle.spotless") version "3.26.1"
     id("com.github.ben-manes.versions") version "0.21.0"
 }
 
@@ -44,14 +44,9 @@ spotless {
     freshmark {
         propertiesFile("gradle.properties")
     }
-    java {
-        target("**/*.java")
-        trimTrailingWhitespace()
-        removeUnusedImports()
-    }
     kotlin {
         target("*/src/**/*.kt")
-        ktlint()
+        ktlint().userData(mapOf("disabled_rules" to "no-wildcard-imports"))
     }
     kotlinGradle {
         target("**/*.gradle.kts")
