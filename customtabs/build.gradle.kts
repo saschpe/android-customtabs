@@ -21,6 +21,7 @@ plugins {
     id("com.android.library")
     id("com.jfrog.bintray") version "1.8.4"
     `maven-publish`
+    kotlin("android")
 }
 
 repositories {
@@ -51,8 +52,10 @@ android {
 }
 
 dependencies {
-    api("androidx.appcompat:appcompat:1.1.0")
     api("androidx.browser:browser:1.0.0")
+
+    implementation("androidx.appcompat:appcompat:1.1.0")
+    implementation(kotlin("stdlib", "1.3.61"))
 
     testImplementation("androidx.test:core:1.2.0")
     testImplementation("androidx.test.ext:junit:1.1.1")
