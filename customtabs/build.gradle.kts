@@ -29,11 +29,11 @@ repositories {
 }
 
 android {
-    compileSdkVersion(28)
+    compileSdkVersion(29)
 
     defaultConfig {
         minSdkVersion(15)
-        targetSdkVersion(28)
+        targetSdkVersion(29)
         versionName = "2.0.3"
     }
 
