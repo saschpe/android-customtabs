@@ -16,14 +16,14 @@
 package saschpe.android.customtabs
 
 import android.content.Intent
-import androidx.test.core.app.ApplicationProvider
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.robolectric.Robolectric
+import org.robolectric.Robolectric.buildActivity
 
 @RunWith(AndroidJUnit4::class)
 @Ignore
@@ -32,12 +32,10 @@ class WebViewActivityTest {
 
     @Before
     fun setupActivity() { // Arrange
-        val intent =
-            Intent(ApplicationProvider.getApplicationContext(), WebViewActivity::class.java)
-                .putExtra(WebViewActivity.EXTRA_TITLE, TEST_TITLE)
-                .putExtra(WebViewActivity.EXTRA_URL, TEST_URL)
-        activity = Robolectric.buildActivity(WebViewActivity::class.java, intent).create()
-            .get()
+        val intent = Intent(getApplicationContext(), WebViewActivity::class.java)
+            .putExtra(WebViewActivity.EXTRA_TITLE, TEST_TITLE)
+            .putExtra(WebViewActivity.EXTRA_URL, TEST_URL)
+        activity = buildActivity(WebViewActivity::class.java, intent).create().get()
     }
 
     @Test

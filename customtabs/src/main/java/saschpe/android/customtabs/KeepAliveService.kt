@@ -13,22 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package saschpe.android.customtabs
 
-package saschpe.android.customtabs;
-
-import android.app.Service;
-import android.content.Intent;
-import android.os.Binder;
-import android.os.IBinder;
+import android.app.Service
+import android.content.Intent
+import android.os.Binder
 
 /**
  * Empty service to bind to, raising the application's importance.
  */
-final class KeepAliveService extends Service {
-    private static final Binder binder = new Binder();
+internal class KeepAliveService : Service() {
+    override fun onBind(intent: Intent) = binder
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return binder;
+    companion object {
+        private val binder = Binder()
     }
 }

@@ -15,7 +15,7 @@
  */
 package saschpe.android.customtabs
 
-import androidx.test.core.app.ApplicationProvider
+import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
@@ -27,8 +27,7 @@ class CustomTabsPackageHelperTest {
     @Test
     fun packageNameToUse_noMockingReturnsNull() {
         // Arrange, act
-        val packageName =
-            CustomTabsPackageHelper.getPackageNameToUse(ApplicationProvider.getApplicationContext())
+        val packageName = CustomTabsPackageHelper.getPackageNameToUse(getApplicationContext())
 
         // Assert
         assertNull(packageName)
@@ -37,7 +36,7 @@ class CustomTabsPackageHelperTest {
     @Test
     fun packages() {
         // Arrange, act
-        val packages = CustomTabsPackageHelper.getPackages()
+        val packages = CustomTabsPackageHelper.packages
 
         // Assert
         assertTrue(packages.contains(CustomTabsPackageHelper.STABLE_PACKAGE))

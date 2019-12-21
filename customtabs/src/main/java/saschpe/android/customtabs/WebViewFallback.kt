@@ -15,31 +15,26 @@
  */
 package saschpe.android.customtabs
 
+import android.content.Context
 import android.content.Intent
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
-import org.junit.Test
-import org.junit.runner.RunWith
-import org.junit.runners.JUnit4
-import org.mockito.Mockito
+import android.net.Uri
+import saschpe.android.customtabs.CustomTabsHelper.CustomTabFallback
 
-@RunWith(JUnit4::class)
-class KeepAliveServiceTest {
-    // Arrange
-    private val mockIntent = Mockito.mock(Intent::class.java)
-
-    @Test
-    fun onBind_returnsValidBinder() {
-        // Act, assert
-        assertNotNull(KeepAliveService().onBind(mockIntent))
-    }
-
-    @Test
-    fun onBind_returnsSameBinder() {
-        // Act, assert
-        assertEquals(
-            KeepAliveService().onBind(mockIntent),
-            KeepAliveService().onBind(Mockito.mock(Intent::class.java))
+/**
+ * Default [CustomTabsHelper.CustomTabFallback] implementation
+ * that uses [WebViewActivity] to display the requested [Uri].
+ */
+class WebViewFallback : CustomTabFallback {
+    /**
+     * @param context The [Context] that wants to open the Uri
+     * @param uri The [Uri] to be opened by the fallback
+     */
+    override fun openUri(context: Context?, uri: Uri?) {
+        context?.startActivity(
+            Intent(context, WebViewActivity::class.java).putExtra(
+                WebViewActivity.EXTRA_URL,
+                uri.toString()
+            )
         )
     }
 }
