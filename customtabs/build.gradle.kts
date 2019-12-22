@@ -1,6 +1,3 @@
-import com.jfrog.bintray.gradle.BintrayExtension
-import groovy.util.Node
-
 /*
  * Copyright 2017 Sascha Peilicke
  *
@@ -19,9 +16,9 @@ import groovy.util.Node
 
 plugins {
     id("com.android.library")
-    id("com.jfrog.bintray") version "1.8.4"
-    `maven-publish`
     kotlin("android")
+    id("org.jetbrains.dokka") version "0.10.0"
+    `maven-publish`
 }
 
 repositories {
@@ -39,7 +36,6 @@ android {
     }
 
     buildTypes {
-        named("debug") {}
         named("release") {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
@@ -53,16 +49,14 @@ android {
 
     kotlinOptions.jvmTarget = "1.8"
 
-    testOptions {
-        unitTests.isIncludeAndroidResources = true
-    }
+    testOptions.unitTests.isIncludeAndroidResources = true
 }
 
 dependencies {
     api("androidx.browser:browser:1.2.0")
 
-    implementation("androidx.appcompat:appcompat:1.1.0")
     implementation(kotlin("stdlib-jdk8", "1.3.61"))
+    implementation("androidx.appcompat:appcompat:1.1.0")
 
     testImplementation("androidx.test:core:1.2.0")
     testImplementation("androidx.test.ext:junit:1.1.1")
@@ -76,95 +70,97 @@ dependencies {
 group = "saschpe.android"
 version = android.defaultConfig.versionName.toString()
 
-val androidJavadoc by tasks.creating(Javadoc::class) {
-    source = android.sourceSets.getByName("main").java.sourceFiles
-    classpath += project.files(android.bootClasspath.joinToString(File.pathSeparator))
-
-    android.libraryVariants.all { variant ->
-        if (variant.name == "release") {
-            variant.javaCompile.classpath?.let { classpath += it }
+tasks {
+    val dokkaJavadoc by creating(org.jetbrains.dokka.gradle.DokkaTask::class) {
+        outputFormat = "javadoc"
+        outputDirectory = "$buildDir/javadoc"
+        configuration {
+            sourceLink {
+                path = "src/main/java"
+                url = "https://github.com/saschpe/android-customtabs/tree/master/customtabs/src/main/java"
+                lineSuffix = "#L"
+            }
         }
-        true
     }
-    exclude("**/R.html", "**/R.*.html", "**index.html")
-}
 
-val androidJavadocJar by tasks.creating(Jar::class) {
-    archiveClassifier.set("javadoc")
-    from(androidJavadoc.destinationDir)
-}
-androidJavadocJar.dependsOn(androidJavadoc)
+    register("androidJavadocJar", Jar::class) {
+        archiveClassifier.set("javadoc")
+        from("$buildDir/javadoc")
+        dependsOn(dokkaJavadoc)
+    }
 
-val androidSourcesJar by tasks.creating(Jar::class) {
-    archiveClassifier.set("sources")
-    from(android.sourceSets.getByName("main").java.srcDirs)
-}
-
-fun Node.addDependency(dependency: Dependency, scope: String) {
-    appendNode("dependency").apply {
-        appendNode("groupId", dependency.group)
-        appendNode("artifactId", dependency.name)
-        appendNode("version", dependency.version)
-        appendNode("scope", scope)
+    register("androidSourcesJar", Jar::class) {
+        archiveClassifier.set("sources")
+        from(android.sourceSets.getByName("main").java.srcDirs)
     }
 }
 
-publishing.publications {
-    create("mavenAndroid", MavenPublication::class) {
-        groupId = project.group as String
-        artifactId = project.name
-        version = project.version as String
+publishing {
+    publications {
+        register<MavenPublication>("mavenAndroid") {
+            artifactId = "customtabs"
 
-        afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
-        artifact(androidJavadocJar)
-        artifact(androidSourcesJar)
+            afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
+            artifact(tasks.getByName("androidJavadocJar"))
+            artifact(tasks.getByName("androidSourcesJar"))
 
-        pom.withXml {
-            asNode().appendNode("dependencies").let { dependencies ->
-                // List all "api" dependencies as "compile" dependencies
-                configurations.api.get().allDependencies.forEach {
-                    dependencies.addDependency(it, "compile")
+            pom {
+                name.set("Android CustomTabs")
+                description.set("Chrome CustomTabs for Android demystified. Simplifies development and provides higher level classes including fallback in case Chrome isn't available on device.")
+                url.set("https://github.com/saschpe/android-customtabs")
+
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                    }
                 }
-                // List all "implementation" dependencies as "runtime" dependencies
-                configurations.implementation.get().allDependencies.forEach {
-                    dependencies.addDependency(it, "runtime")
+                developers {
+                    developer {
+                        id.set("saschpe")
+                        name.set("Sascha Peilicke")
+                        email.set("sascha@peilicke.de")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:git://github.com/saschpe/android-customtabs.git")
+                    developerConnection.set("scm:git:ssh://github.com/saschpe/android-customtabs.git")
+                    url.set("https://github.com/saschpe/android-customtabs")
+                }
+
+                withXml {
+                    fun groovy.util.Node.addDependency(dependency: Dependency, scope: String) {
+                        appendNode("dependency").apply {
+                            appendNode("groupId", dependency.group)
+                            appendNode("artifactId", dependency.name)
+                            appendNode("version", dependency.version)
+                            appendNode("scope", scope)
+                        }
+                    }
+
+                    asNode().appendNode("dependencies").let { dependencies ->
+                        // List all "api" dependencies as "compile" dependencies
+                        configurations.api.get().allDependencies.forEach {
+                            dependencies.addDependency(it, "compile")
+                        }
+                        // List all "implementation" dependencies as "runtime" dependencies
+                        configurations.implementation.get().allDependencies.forEach {
+                            dependencies.addDependency(it, "runtime")
+                        }
+                    }
                 }
             }
         }
     }
-}
 
-bintray {
-    user = Secrets.Bintray.user
-    key = Secrets.Bintray.apiKey
-    setPublications("mavenAndroid")
-    setConfigurations("archives")
-    override = true
-    publish = true
-    pkg(delegateClosureOf<BintrayExtension.PackageConfig> {
-        repo = "maven"
-        name = "android-customtabs"
-        userOrg = "saschpe"
-        websiteUrl = "https://github.com/saschpe/android-customtabs"
-        issueTrackerUrl = "https://github.com/saschpe/android-customtabs/issues"
-        vcsUrl = "https://github.com/saschpe/android-customtabs.git"
-        desc = "Chrome CustomTabs for Android simplified."
-        setLabels("aar", "android")
-        setLicenses("Apache-2.0")
-        publicDownloadNumbers = true
-
-        githubRepo = "saschpe/android-customtabs"
-        githubReleaseNotesFile = "README.md"
-
-        version(delegateClosureOf<BintrayExtension.VersionConfig> {
-            name = project.version as String
-            desc = "${project.name} ${project.version as String}"
-            // released = java.util.Date()
-            vcsTag = project.version as String
-
-            gpg(delegateClosureOf<BintrayExtension.GpgConfig> {
-                sign = true
-            })
-        })
-    })
+    repositories {
+        maven {
+            name = "bintray"
+            credentials {
+                username = Secrets.Bintray.user
+                password = Secrets.Bintray.apiKey
+            }
+            url = uri("https://api.bintray.com/maven/saschpe/maven/android-customtabs/;publish=1")
+        }
+    }
 }
