@@ -32,7 +32,7 @@ android {
     defaultConfig {
         minSdkVersion(16)
         targetSdkVersion(29)
-        versionName = "3.0.0"
+        versionName = "3.0.1"
     }
 
     buildTypes {
