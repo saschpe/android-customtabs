@@ -32,8 +32,8 @@ android {
         applicationId = "com.example.saschpe.customtabs"
         minSdkVersion(17)
         targetSdkVersion(29)
-        versionCode = 170020003
-        versionName = "2.0.3"
+        versionCode = 170030000
+        versionName = "3.0.0"
         base.archivesBaseName = "$applicationId-$versionName"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
