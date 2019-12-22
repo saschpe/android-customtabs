@@ -21,6 +21,7 @@ plugins {
     id("com.android.library")
     id("com.jfrog.bintray") version "1.8.4"
     `maven-publish`
+    kotlin("android")
 }
 
 repositories {
@@ -29,22 +30,28 @@ repositories {
 }
 
 android {
-    compileSdkVersion(28)
+    compileSdkVersion(29)
 
     defaultConfig {
-        minSdkVersion(15)
-        targetSdkVersion(28)
-        versionName = "2.0.3"
+        minSdkVersion(16)
+        targetSdkVersion(29)
+        versionName = "3.0.0"
     }
 
     buildTypes {
-        getByName("debug") {
-        }
-        getByName("release") {
+        named("debug") {}
+        named("release") {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions.jvmTarget = "1.8"
 
     testOptions {
         unitTests.isIncludeAndroidResources = true
@@ -52,13 +59,17 @@ android {
 }
 
 dependencies {
-    api("androidx.appcompat:appcompat:1.0.2")
-    api("androidx.browser:browser:1.0.0")
+    api("androidx.browser:browser:1.2.0")
 
-    testImplementation("androidx.test:core:1.1.0")
-    testImplementation("androidx.test.ext:junit:1.1.0")
-    testImplementation("junit:junit:4.12")
-    testImplementation("org.robolectric:robolectric:4.2")
+    implementation("androidx.appcompat:appcompat:1.1.0")
+    implementation(kotlin("stdlib-jdk8", "1.3.61"))
+
+    testImplementation("androidx.test:core:1.2.0")
+    testImplementation("androidx.test.ext:junit:1.1.1")
+    testImplementation("org.robolectric:robolectric:4.3.1") {
+        // https://github.com/robolectric/robolectric/issues/4621
+        exclude(group = "com.google.auto.service", module = "auto-service")
+    }
     testImplementation("org.mockito:mockito-core:2.27.0")
 }
 
@@ -71,7 +82,7 @@ val androidJavadoc by tasks.creating(Javadoc::class) {
 
     android.libraryVariants.all { variant ->
         if (variant.name == "release") {
-            variant.javaCompile?.classpath?.let { classpath += it }
+            variant.javaCompile.classpath?.let { classpath += it }
         }
         true
     }
@@ -104,11 +115,11 @@ publishing.publications {
         artifactId = project.name
         version = project.version as String
 
-        afterEvaluate({ artifact(tasks.getByName("bundleReleaseAar")) })
+        afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
         artifact(androidJavadocJar)
         artifact(androidSourcesJar)
 
-        pom.withXml({
+        pom.withXml {
             asNode().appendNode("dependencies").let { dependencies ->
                 // List all "api" dependencies as "compile" dependencies
                 configurations.api.get().allDependencies.forEach {
@@ -119,7 +130,7 @@ publishing.publications {
                     dependencies.addDependency(it, "runtime")
                 }
             }
-        })
+        }
     }
 }
 

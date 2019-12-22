@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2017 Sascha Peilicke
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,7 +13,6 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
 <WebView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/web_view"
     android:layout_width="match_parent"

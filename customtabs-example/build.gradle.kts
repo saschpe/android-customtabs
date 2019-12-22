@@ -26,21 +26,21 @@ repositories {
 }
 
 android {
-    compileSdkVersion(28)
+    compileSdkVersion(29)
 
     defaultConfig {
         applicationId = "com.example.saschpe.customtabs"
         minSdkVersion(17)
-        targetSdkVersion(28)
-        versionCode = 170020003
-        versionName = "2.0.3"
+        targetSdkVersion(29)
+        versionCode = 170030000
+        versionName = "3.0.0"
         base.archivesBaseName = "$applicationId-$versionName"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
-        getByName("release") {
+        named("release") {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
@@ -48,19 +48,20 @@ android {
         }
     }
 
-    sourceSets {
-        // Increase Android Studio Kotlin compatibility
-        findByName("androidTest")?.java?.srcDirs("src/androidTest/kotlin")
-        findByName("main")?.java?.srcDirs("src/main/kotlin")
-        findByName("test")?.java?.srcDirs("src/test/kotlin")
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+    kotlinOptions.jvmTarget = "1.8"
+
+    sourceSets.forEach { it.java.srcDir("src/${it.name}/kotlin") }
 }
 
 dependencies {
-    implementation(kotlin("stdlib-jdk8", "1.3.31"))
+    implementation(kotlin("stdlib", "1.3.61"))
     implementation(project(":customtabs"))
-    implementation("androidx.browser:browser:1.0.0")
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
-    implementation("androidx.vectordrawable:vectordrawable-animated:1.0.0")
+    implementation("androidx.vectordrawable:vectordrawable-animated:1.1.0")
     implementation("com.google.android.material:material:1.0.0")
 }
