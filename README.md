@@ -51,8 +51,10 @@ compile 'saschpe.android:customtabs:2.0.0'
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
 
-# Users
-* [Alpha+ Player](https://play.google.com/store/apps/details?id=saschpe.alphaplus)
+# In use by
+* [Alpha+ Player - Unofficial player for Soma FM](https://play.google.com/store/apps/details?id=saschpe.alphaplus)
+* [GameOn - Get games on sale](https://play.google.com/store/apps/details?id=saschpe.gameon)
+* [Planning Poker - SCRUM Cards](https://play.google.com/store/apps/details?id=saschpe.poker) - Open Source on [Github](https://github.com/saschpe/PlanningPoker)
 
 # License
 
