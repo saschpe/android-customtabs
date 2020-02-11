@@ -17,7 +17,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("org.jetbrains.dokka") version "0.10.0"
+    id("org.jetbrains.dokka") version "0.10.1"
     `maven-publish`
 }
 
@@ -64,7 +64,7 @@ dependencies {
         // https://github.com/robolectric/robolectric/issues/4621
         exclude(group = "com.google.auto.service", module = "auto-service")
     }
-    testImplementation("org.mockito:mockito-core:2.27.0")
+    testImplementation("org.mockito:mockito-core:3.2.4")
 }
 
 group = "saschpe.android"
