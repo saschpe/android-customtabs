@@ -40,12 +40,14 @@ class CustomTabsHelper {
      * @param activity the activity that is connected to the service
      */
     fun unbindCustomTabsService(activity: Activity) {
-        if (connection == null) {
-            return
+        connection?.let {
+            try {
+                activity.unbindService(it)
+            } catch (e: IllegalArgumentException) {
+            }
+            client = null
+            customTabsSession = null
         }
-        activity.unbindService(connection!!)
-        client = null
-        customTabsSession = null
     }
 
     /**
@@ -175,13 +177,9 @@ class CustomTabsHelper {
         }
 
         fun addKeepAliveExtra(context: Context, intent: Intent) {
-            val keepAliveIntent = Intent().apply {
-                setClassName(
-                    context.packageName,
-                    KeepAliveService::class.java.canonicalName as String
-                )
-            }
-            intent.putExtra(EXTRA_CUSTOM_TABS_KEEP_ALIVE, keepAliveIntent)
+            intent.putExtra(EXTRA_CUSTOM_TABS_KEEP_ALIVE, Intent().apply {
+                setClassName(context.packageName, KeepAliveService::class.java.canonicalName as String)
+            })
         }
     }
 }
