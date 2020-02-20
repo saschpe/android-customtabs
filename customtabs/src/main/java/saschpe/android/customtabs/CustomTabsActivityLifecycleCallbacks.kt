@@ -28,15 +28,13 @@ class CustomTabsActivityLifecycleCallbacks : ActivityLifecycleCallbacks {
 
     override fun onActivityStarted(activity: Activity) = Unit
 
-    override fun onActivityResumed(activity: Activity) {
-        customTabsHelper.bindCustomTabsService(activity)
-    }
+    override fun onActivityResumed(activity: Activity) = customTabsHelper.bindCustomTabsService(activity)
 
-    override fun onActivityPaused(activity: Activity) {
-        customTabsHelper.unbindCustomTabsService(activity)
-    }
+    override fun onActivityPaused(activity: Activity) = customTabsHelper.unbindCustomTabsService(activity)
 
     override fun onActivityStopped(activity: Activity) = Unit
+
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+
     override fun onActivityDestroyed(activity: Activity) = Unit
 }
