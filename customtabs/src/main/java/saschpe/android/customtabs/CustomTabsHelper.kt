@@ -40,12 +40,14 @@ class CustomTabsHelper {
      * @param activity the activity that is connected to the service
      */
     fun unbindCustomTabsService(activity: Activity) {
-        if (connection == null) {
-            return
+        connection?.let {
+            try {
+                activity.unbindService(it)
+            } catch (e: IllegalArgumentException) {
+            }
+            client = null
+            customTabsSession = null
         }
-        activity.unbindService(connection!!)
-        client = null
-        customTabsSession = null
     }
 
     /**
