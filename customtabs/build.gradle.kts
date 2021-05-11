@@ -19,6 +19,7 @@ plugins {
     kotlin("android")
     id("org.jetbrains.dokka") version "1.4.32"
     `maven-publish`
+    signing
 }
 
 repositories {
@@ -64,7 +65,7 @@ dependencies {
     testImplementation("org.mockito:mockito-core:3.9.0")
 }
 
-group = "saschpe.android"
+group = "de.peilicke.sascha"
 version = android.defaultConfig.versionName.toString()
 
 tasks {
@@ -83,7 +84,7 @@ tasks {
 publishing {
     publications {
         register<MavenPublication>("mavenAndroid") {
-            artifactId = "customtabs"
+            artifactId = "android-customtabs"
 
             afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
             artifact(tasks.getByName("javadocJar"))
@@ -97,7 +98,7 @@ publishing {
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
                     }
                 }
                 developers {
@@ -140,12 +141,17 @@ publishing {
 
     repositories {
         maven {
-            name = "bintray"
+            name = "sonatype"
             credentials {
-                username = Secrets.Bintray.user
-                password = Secrets.Bintray.apiKey
+                username = Secrets.Sonatype.user
+                password = Secrets.Sonatype.apiKey
             }
-            url = uri("https://api.bintray.com/maven/saschpe/maven/android-customtabs/;publish=1")
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
         }
     }
+}
+
+signing {
+    useGpgCmd()
+    sign(publishing.publications["mavenAndroid"])
 }

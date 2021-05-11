@@ -1,5 +1,5 @@
 # Android CustomTabs
-[![Download](https://api.bintray.com/packages/saschpe/maven/android-customtabs/images/download.svg)](https://bintray.com/saschpe/maven/android-customtabs/_latestVersion)
+![Maven Central](https://img.shields.io/maven-central/v/de.peilicke.sascha/android-customtabs)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Android%20CustomTabs-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/5872)
 [![License](http://img.shields.io/:license-apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 [![Build Status](https://travis-ci.org/saschpe/android-customtabs.svg?branch=master)](https://travis-ci.org/saschpe/android-customtabs)
@@ -45,11 +45,16 @@ registerActivityLifecycleCallbacks(new CustomTabsActivityLifecycleCallbacks());
 <img alt="Screenshot 3" src="assets/device-art/customtabs-3.png" width="256" />
 
 # Download
-```groovy
-compile 'saschpe.android:customtabs:3.0.2'
-```
+Artifacts are published to [Maven Central][maven-central]:
+```kotlin
+repositories {
+    mavenCentral()
+}
 
-Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].
+dependencies {
+    implementation("de.peilicke.sascha:android-customtabs:3.0.2")
+}
+```
 
 # In use by
 * [Alpha+ Player - Unofficial player for Soma FM](https://play.google.com/store/apps/details?id=saschpe.alphaplus)
@@ -72,5 +77,4 @@ Snapshots of the development version are available in [Sonatype's `snapshots` re
     See the License for the specific language governing permissions and
     limitations under the License.
 
-
- [snap]: https://oss.sonatype.org/content/repositories/snapshots/
+[maven-central]: https://search.maven.org/artifact/de.peilicke.sascha/android-customtabs

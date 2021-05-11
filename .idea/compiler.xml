@@ -12,9 +12,6 @@
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
     <bytecodeTargetLevel target="11">
-      <module name="android-customtabs.buildSrc" target="11" />
-      <module name="android-customtabs.customtabs" target="11" />
-      <module name="android-customtabs.customtabs-example" target="11" />
       <module name="Android.android-customtabs" target="11" />
     </bytecodeTargetLevel>
   </component>

@@ -17,7 +17,7 @@ tasks {
                 secretFile.writeText(
                     """
 object Secrets {
-    object Bintray {
+    object Sonatype {
         const val user = ""
         const val apiKey = ""
     }
