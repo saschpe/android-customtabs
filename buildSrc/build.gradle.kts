@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.3.61"
+    `kotlin-dsl`
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 tasks {

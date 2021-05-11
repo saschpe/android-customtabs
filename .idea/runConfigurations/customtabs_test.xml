@@ -1,27 +1,25 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="customtabs-test" type="AndroidJUnit" factoryName="Android JUnit">
-    <module name="customtabs" />
+    <shortenClasspath name="NONE" />
+    <useClassPathOnly />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="saschpe.android.customtabs.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
-    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
-    <option name="ALTERNATIVE_JRE_PATH" />
-    <option name="PACKAGE_NAME" />
+    <option name="PACKAGE_NAME" value="" />
     <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
-    <option name="TEST_OBJECT" value="directory" />
-    <option name="VM_PARAMETERS" value="-ea" />
+    <option name="TEST_OBJECT" value="package" />
     <option name="PARAMETERS" value="" />
-    <option name="WORKING_DIRECTORY" value="file://$MODULE_DIR$" />
-    <option name="PASS_PARENT_ENVS" value="true" />
+    <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
     <option name="TEST_SEARCH_SCOPE">
-      <value defaultName="singleModule" />
+      <value defaultName="wholeProject" />
     </option>
     <dir value="$PROJECT_DIR$/customtabs/src/test/java" />
-    <patterns />
-    <method />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
   </configuration>
 </component>

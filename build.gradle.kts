@@ -19,7 +19,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.5.3")
+        classpath("com.android.tools.build:gradle:4.1.1")
     }
 }
 
@@ -30,7 +30,7 @@ plugins {
 }
 
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 spotless {
@@ -56,7 +56,6 @@ spotless {
 tasks.withType<com.github.benmanes.gradle.versions.updates.DependencyUpdatesTask> {
     rejectVersionIf {
         fun isStable(version: String) = Regex("^[0-9,.v-]+(-r)?$").matches(version)
-
         !isStable(candidate.version) && isStable(currentVersion)
     }
 }

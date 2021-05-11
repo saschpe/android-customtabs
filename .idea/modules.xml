@@ -3,10 +3,14 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Android-android-customtabs.iml" filepath="$PROJECT_DIR$/Android-android-customtabs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Android.android-customtabs.iml" filepath="$PROJECT_DIR$/.idea/modules/Android.android-customtabs.iml" />
       <module fileurl="file://$PROJECT_DIR$/android-customtabs.iml" filepath="$PROJECT_DIR$/android-customtabs.iml" />
       <module fileurl="file://$PROJECT_DIR$/buildSrc/android-customtabs-buildSrc.iml" filepath="$PROJECT_DIR$/buildSrc/android-customtabs-buildSrc.iml" />
       <module fileurl="file://$PROJECT_DIR$/customtabs/android-customtabs-customtabs.iml" filepath="$PROJECT_DIR$/customtabs/android-customtabs-customtabs.iml" />
       <module fileurl="file://$PROJECT_DIR$/customtabs-example/android-customtabs-customtabs-example.iml" filepath="$PROJECT_DIR$/customtabs-example/android-customtabs-customtabs-example.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/android-customtabs.buildSrc.iml" filepath="$PROJECT_DIR$/.idea/modules/android-customtabs.buildSrc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/customtabs/android-customtabs.customtabs.iml" filepath="$PROJECT_DIR$/.idea/modules/customtabs/android-customtabs.customtabs.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/customtabs-example/android-customtabs.customtabs-example.iml" filepath="$PROJECT_DIR$/.idea/modules/customtabs-example/android-customtabs.customtabs-example.iml" />
       <module fileurl="file://$PROJECT_DIR$/buildSrc/buildSrc.iml" filepath="$PROJECT_DIR$/buildSrc/buildSrc.iml" />
       <module fileurl="file://$PROJECT_DIR$/customtabs/customtabs.iml" filepath="$PROJECT_DIR$/customtabs/customtabs.iml" />
       <module fileurl="file://$PROJECT_DIR$/customtabs-example/customtabs-example.iml" filepath="$PROJECT_DIR$/customtabs-example/customtabs-example.iml" />
