@@ -17,13 +17,14 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("org.jetbrains.dokka") version "0.10.1"
+    id("org.jetbrains.dokka") version "1.4.32"
     `maven-publish`
+    signing
 }
 
 repositories {
     google()
-    jcenter()
+    mavenCentral()
 }
 
 android {
@@ -32,7 +33,8 @@ android {
     defaultConfig {
         minSdkVersion(16)
         targetSdkVersion(29)
-        versionName = "3.0.2"
+        versionName = "3.0.3"
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
@@ -55,41 +57,25 @@ android {
 dependencies {
     api("androidx.browser:browser:1.2.0")
 
-    implementation(kotlin("stdlib-jdk8", "1.3.61"))
-    implementation("androidx.appcompat:appcompat:1.1.0")
+    implementation("androidx.appcompat:appcompat:1.2.0")
 
-    testImplementation("androidx.test:core:1.2.0")
-    testImplementation("androidx.test.ext:junit:1.1.1")
-    testImplementation("org.robolectric:robolectric:4.3.1") {
-        // https://github.com/robolectric/robolectric/issues/4621
-        exclude(group = "com.google.auto.service", module = "auto-service")
-    }
-    testImplementation("org.mockito:mockito-core:3.2.4")
+    testImplementation("androidx.test:core:1.3.0")
+    testImplementation("androidx.test.ext:junit:1.1.2")
+    testImplementation("org.robolectric:robolectric:4.5.1")
+    testImplementation("org.mockito:mockito-core:3.9.0")
 }
 
-group = "saschpe.android"
+group = "de.peilicke.sascha"
 version = android.defaultConfig.versionName.toString()
 
 tasks {
-    val dokkaJavadoc by creating(org.jetbrains.dokka.gradle.DokkaTask::class) {
-        outputFormat = "javadoc"
-        outputDirectory = "$buildDir/javadoc"
-        configuration {
-            sourceLink {
-                path = "src/main/java"
-                url = "https://github.com/saschpe/android-customtabs/tree/master/customtabs/src/main/java"
-                lineSuffix = "#L"
-            }
-        }
-    }
-
-    register("androidJavadocJar", Jar::class) {
+    register("javadocJar", Jar::class) {
+        dependsOn(named("dokkaHtml"))
         archiveClassifier.set("javadoc")
-        from("$buildDir/javadoc")
-        dependsOn(dokkaJavadoc)
+        from("$buildDir/dokka/html")
     }
 
-    register("androidSourcesJar", Jar::class) {
+    register("sourcesJar", Jar::class) {
         archiveClassifier.set("sources")
         from(android.sourceSets.getByName("main").java.srcDirs)
     }
@@ -98,11 +84,11 @@ tasks {
 publishing {
     publications {
         register<MavenPublication>("mavenAndroid") {
-            artifactId = "customtabs"
+            artifactId = "android-customtabs"
 
             afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
-            artifact(tasks.getByName("androidJavadocJar"))
-            artifact(tasks.getByName("androidSourcesJar"))
+            artifact(tasks.getByName("javadocJar"))
+            artifact(tasks.getByName("sourcesJar"))
 
             pom {
                 name.set("Android CustomTabs")
@@ -112,7 +98,7 @@ publishing {
                 licenses {
                     license {
                         name.set("The Apache License, Version 2.0")
-                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
                     }
                 }
                 developers {
@@ -155,12 +141,17 @@ publishing {
 
     repositories {
         maven {
-            name = "bintray"
+            name = "sonatype"
             credentials {
-                username = Secrets.Bintray.user
-                password = Secrets.Bintray.apiKey
+                username = Secrets.Sonatype.user
+                password = Secrets.Sonatype.apiKey
             }
-            url = uri("https://api.bintray.com/maven/saschpe/maven/android-customtabs/;publish=1")
+            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
         }
     }
+}
+
+signing {
+    useGpgCmd()
+    sign(publishing.publications["mavenAndroid"])
 }

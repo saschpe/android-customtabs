@@ -42,7 +42,7 @@ class WebViewActivity : AppCompatActivity(R.layout.activity_webview) {
         }
 
         val webView = findViewById<WebView>(R.id.web_view)
-        webView.loadUrl(url)
+        url?.let { webView.loadUrl(it) }
         webView.settings.javaScriptEnabled = true
 
         // No title provided. Use the website's once it's loaded...

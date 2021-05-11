@@ -22,7 +22,7 @@ plugins {
 
 repositories {
     google()
-    jcenter()
+    mavenCentral()
 }
 
 android {
@@ -32,8 +32,8 @@ android {
         applicationId = "com.example.saschpe.customtabs"
         minSdkVersion(17)
         targetSdkVersion(29)
-        versionCode = 170030002
-        versionName = "3.0.2"
+        versionCode = 170030003
+        versionName = "3.0.3"
         base.archivesBaseName = "$applicationId-$versionName"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -59,9 +59,8 @@ android {
 }
 
 dependencies {
-    implementation(kotlin("stdlib", "1.3.61"))
     implementation(project(":customtabs"))
-    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.vectordrawable:vectordrawable-animated:1.1.0")
-    implementation("com.google.android.material:material:1.1.0")
+    implementation("com.google.android.material:material:1.3.0")
 }

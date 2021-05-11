@@ -59,7 +59,7 @@ internal object CustomTabsPackageHelper {
         // Get all apps that can handle VIEW intents.
         val resolvedActivityList = pm.queryIntentActivities(activityIntent, 0)
         val packagesSupportingCustomTabs = mutableListOf<String>()
-        resolvedActivityList.forEach { info ->
+        for (info in resolvedActivityList) {
             val serviceIntent = Intent().apply {
                 action = CustomTabsService.ACTION_CUSTOM_TABS_CONNECTION
                 setPackage(info.activityInfo.packageName)
@@ -101,10 +101,10 @@ internal object CustomTabsPackageHelper {
             if (handlers.size == 0) {
                 return false
             }
-            handlers.forEach { resolveInfo ->
-                val filter = resolveInfo.filter ?: return@forEach
-                if (filter.countDataAuthorities() == 0 || filter.countDataPaths() == 0) return@forEach
-                if (resolveInfo.activityInfo == null) return@forEach
+            for (resolveInfo in handlers) {
+                val filter = resolveInfo.filter ?: continue
+                if (filter.countDataAuthorities() == 0 || filter.countDataPaths() == 0) continue
+                if (resolveInfo.activityInfo == null) continue
                 return true
             }
         } catch (e: RuntimeException) {

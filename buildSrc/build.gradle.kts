@@ -1,13 +1,9 @@
 plugins {
-    kotlin("jvm") version "1.3.61"
+    `kotlin-dsl`
 }
 
 repositories {
-    jcenter()
-}
-
-dependencies {
-    implementation(kotlin("stdlib"))
+    mavenCentral()
 }
 
 tasks {
@@ -21,7 +17,7 @@ tasks {
                 secretFile.writeText(
                     """
 object Secrets {
-    object Bintray {
+    object Sonatype {
         const val user = ""
         const val apiKey = ""
     }

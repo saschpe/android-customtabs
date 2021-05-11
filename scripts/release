@@ -74,6 +74,10 @@ for gradle_file in ${GRADLE_FILES[@]} ; do
     git_commit_files="${git_commit_files} ${gradle_file}"
 done
 
+# Update README.md
+sed2 "s/android-customtabs:.*\"/android-customtabs:${version_name_new}\"/" README.md
+git_commit_files="${git_commit_files} README.md"
+
 # Create a commit with appropriate tag
 git_commit_message="Release version ${version_name_new}"
 safe git commit --signoff ${git_commit_files} -m "${git_commit_message}"
