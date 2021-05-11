@@ -6,10 +6,6 @@ repositories {
     jcenter()
 }
 
-dependencies {
-    implementation(kotlin("stdlib"))
-}
-
 tasks {
     val ensureSecretsExist by registering {
         val secretFile = File("$projectDir/src/main/kotlin/Secrets.kt")
