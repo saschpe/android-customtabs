@@ -46,7 +46,7 @@ registerActivityLifecycleCallbacks(new CustomTabsActivityLifecycleCallbacks());
 
 # Download
 ```groovy
-compile 'saschpe.android:customtabs:2.0.0'
+compile 'saschpe.android:customtabs:3.0.2'
 ```
 
 Snapshots of the development version are available in [Sonatype's `snapshots` repository][snap].

@@ -17,7 +17,7 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("org.jetbrains.dokka") version "0.10.1"
+    id("org.jetbrains.dokka") version "1.4.32"
     `maven-publish`
 }
 
@@ -55,7 +55,6 @@ android {
 dependencies {
     api("androidx.browser:browser:1.2.0")
 
-    implementation(kotlin("stdlib-jdk8", "1.3.61"))
     implementation("androidx.appcompat:appcompat:1.1.0")
 
     testImplementation("androidx.test:core:1.2.0")
@@ -71,25 +70,13 @@ group = "saschpe.android"
 version = android.defaultConfig.versionName.toString()
 
 tasks {
-    val dokkaJavadoc by creating(org.jetbrains.dokka.gradle.DokkaTask::class) {
-        outputFormat = "javadoc"
-        outputDirectory = "$buildDir/javadoc"
-        configuration {
-            sourceLink {
-                path = "src/main/java"
-                url = "https://github.com/saschpe/android-customtabs/tree/master/customtabs/src/main/java"
-                lineSuffix = "#L"
-            }
-        }
-    }
-
-    register("androidJavadocJar", Jar::class) {
+    register("javadocJar", Jar::class) {
+        dependsOn(named("dokkaHtml"))
         archiveClassifier.set("javadoc")
-        from("$buildDir/javadoc")
-        dependsOn(dokkaJavadoc)
+        from("$buildDir/dokka/html")
     }
 
-    register("androidSourcesJar", Jar::class) {
+    register("sourcesJar", Jar::class) {
         archiveClassifier.set("sources")
         from(android.sourceSets.getByName("main").java.srcDirs)
     }
@@ -101,8 +88,8 @@ publishing {
             artifactId = "customtabs"
 
             afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
-            artifact(tasks.getByName("androidJavadocJar"))
-            artifact(tasks.getByName("androidSourcesJar"))
+            artifact(tasks.getByName("javadocJar"))
+            artifact(tasks.getByName("sourcesJar"))
 
             pom {
                 name.set("Android CustomTabs")

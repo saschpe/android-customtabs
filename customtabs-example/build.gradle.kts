@@ -59,7 +59,6 @@ android {
 }
 
 dependencies {
-    implementation(kotlin("stdlib", "1.3.61"))
     implementation(project(":customtabs"))
     implementation("androidx.constraintlayout:constraintlayout:1.1.3")
     implementation("androidx.vectordrawable:vectordrawable-animated:1.1.0")
