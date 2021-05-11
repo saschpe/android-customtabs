@@ -60,7 +60,7 @@ android {
 
 dependencies {
     implementation(project(":customtabs"))
-    implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
     implementation("androidx.vectordrawable:vectordrawable-animated:1.1.0")
-    implementation("com.google.android.material:material:1.1.0")
+    implementation("com.google.android.material:material:1.3.0")
 }

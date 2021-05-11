@@ -11,7 +11,7 @@
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="11">
       <module name="android-customtabs.buildSrc" target="11" />
       <module name="android-customtabs.customtabs" target="11" />
       <module name="android-customtabs.customtabs-example" target="11" />
