@@ -17,14 +17,13 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("android.extensions")
 }
 
 dependencies {
     implementation(project(":customtabs"))
-    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
-    implementation("androidx.vectordrawable:vectordrawable-animated:1.1.0")
-    implementation("com.google.android.material:material:1.3.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.vectordrawable:vectordrawable-animated:1.2.0")
+    implementation("com.google.android.material:material:1.12.0")
 }
 
 android {
@@ -32,29 +31,36 @@ android {
 
     defaultConfig {
         applicationId = "com.example.saschpe.customtabs"
-        compileSdk = 33
-        minSdk = 17
-        targetSdk = 33
-        versionCode = 170030003
+        compileSdk = 34
+        minSdk = 21
+        targetSdk = 34
+        versionCode = 210030003
         versionName = "3.0.3"
         base.archivesName = "$applicationId-$versionName"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     buildTypes {
+        debug {
+            applicationIdSuffix = ".debug"
+        }
         release {
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
             signingConfig = signingConfigs.getByName("debug")
         }
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "17"
 }

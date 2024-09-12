@@ -22,3 +22,4 @@
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
+-dontwarn java.lang.invoke.StringConcatFactory

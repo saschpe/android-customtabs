@@ -19,21 +19,21 @@ package com.example.saschpe.customtabs.activity
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import com.example.saschpe.customtabs.R
-import kotlinx.android.synthetic.main.activity_main.fab
-import kotlinx.android.synthetic.main.activity_main.toolbar
+import com.example.saschpe.customtabs.databinding.ActivityMainBinding
 import saschpe.android.customtabs.CustomTabsHelper
 import saschpe.android.customtabs.WebViewFallback
 
 class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
+
     /**
      * Apply some sensible defaults across a single app.
      * Not strictly necessary but simplifies code when having many different
@@ -44,8 +44,12 @@ class MainActivity : AppCompatActivity() {
     private val defaultCustomTabsIntentBuilder: CustomTabsIntent.Builder
         get() {
             val builder = CustomTabsIntent.Builder()
-                .addDefaultShareMenuItem()
-                .setToolbarColor(ResourcesCompat.getColor(resources, R.color.colorPrimary, null))
+                .setShareState(CustomTabsIntent.SHARE_STATE_ON)
+                .setDefaultColorSchemeParams(
+                    CustomTabColorSchemeParams.Builder()
+                        .setToolbarColor(ResourcesCompat.getColor(resources, R.color.colorPrimary, null))
+                        .build(),
+                )
                 .setShowTitle(true)
             getBitmapFromVectorDrawable(R.drawable.ic_arrow_back_white_24dp)?.let {
                 builder.setCloseButtonIcon(it)
@@ -55,10 +59,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
 
-        fab.setOnClickListener { startGitHubProjectCustomTab() }
+        binding.fab.setOnClickListener { startGitHubProjectCustomTab() }
     }
 
     /**
@@ -90,17 +95,9 @@ class MainActivity : AppCompatActivity() {
      * @param drawableId The drawable ID
      * @return Bitmap equivalent
      */
-    private fun getBitmapFromVectorDrawable(@DrawableRes drawableId: Int): Bitmap? {
-        var drawable = AppCompatResources.getDrawable(this, drawableId) ?: return null
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-            drawable = DrawableCompat.wrap(drawable).mutate()
-        }
-
-        val bitmap = Bitmap.createBitmap(
-            drawable.intrinsicWidth,
-            drawable.intrinsicHeight,
-            Bitmap.Config.ARGB_8888,
-        )
+    private fun getBitmapFromVectorDrawable(@Suppress("SameParameterValue") @DrawableRes drawableId: Int): Bitmap? {
+        val drawable = AppCompatResources.getDrawable(this, drawableId) ?: return null
+        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.width, canvas.height)
         drawable.draw(canvas)

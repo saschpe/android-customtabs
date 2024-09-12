@@ -17,28 +17,27 @@
 plugins {
     id("com.android.library")
     kotlin("android")
-    id("org.jetbrains.dokka") version "1.4.32"
     `maven-publish`
     signing
 }
 
 dependencies {
-    api("androidx.browser:browser:1.2.0")
+    api("androidx.browser:browser:1.8.0")
 
-    implementation("androidx.appcompat:appcompat:1.2.0")
+    implementation("androidx.appcompat:appcompat:1.7.0")
 
-    testImplementation("androidx.test:core:1.3.0")
-    testImplementation("androidx.test.ext:junit:1.1.2")
-    testImplementation("org.robolectric:robolectric:4.7.1")
-    testImplementation("org.mockito:mockito-core:3.9.0")
+    testImplementation("androidx.test:core:1.6.1")
+    testImplementation("androidx.test.ext:junit:1.2.1")
+    testImplementation("org.robolectric:robolectric:4.13")
+    testImplementation("org.mockito:mockito-core:5.13.0")
 }
 
 android {
     namespace = "saschpe.android.customtabs"
 
     defaultConfig {
-        compileSdk = 33
-        minSdk = 16
+        compileSdk = 34
+        minSdk = 21
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -50,28 +49,19 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions.jvmTarget = "1.8"
+    kotlinOptions.jvmTarget = "17"
 
     testOptions.unitTests.isIncludeAndroidResources = true
-}
 
-group = "de.peilicke.sascha"
-version = android.defaultConfig.versionName.toString()
-
-tasks {
-    register("javadocJar", Jar::class) {
-        dependsOn(named("dokkaHtml"))
-        archiveClassifier.set("javadoc")
-        from("${layout.buildDirectory}/dokka/html")
-    }
-
-    register("sourcesJar", Jar::class) {
-        archiveClassifier.set("sources")
-        from(android.sourceSets.getByName("main").java.srcDirs)
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
     }
 }
 
@@ -79,11 +69,12 @@ publishing {
     publications {
         register<MavenPublication>("mavenAndroid") {
             artifactId = "android-customtabs"
+            groupId = "de.peilicke.sascha"
             version = "3.0.3"
 
-            afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
-            artifact(tasks.getByName("javadocJar"))
-            artifact(tasks.getByName("sourcesJar"))
+            afterEvaluate {
+                from(components["release"])
+            }
 
             pom {
                 name.set("Android CustomTabs")
@@ -107,28 +98,6 @@ publishing {
                     connection.set("scm:git:git://github.com/saschpe/android-customtabs.git")
                     developerConnection.set("scm:git:ssh://github.com/saschpe/android-customtabs.git")
                     url.set("https://github.com/saschpe/android-customtabs")
-                }
-
-                withXml {
-                    fun groovy.util.Node.addDependency(dependency: Dependency, scope: String) {
-                        appendNode("dependency").apply {
-                            appendNode("groupId", dependency.group)
-                            appendNode("artifactId", dependency.name)
-                            appendNode("version", dependency.version)
-                            appendNode("scope", scope)
-                        }
-                    }
-
-                    asNode().appendNode("dependencies").let { dependencies ->
-                        // List all "api" dependencies as "compile" dependencies
-                        configurations.api.get().allDependencies.forEach {
-                            dependencies.addDependency(it, "compile")
-                        }
-                        // List all "implementation" dependencies as "runtime" dependencies
-                        configurations.implementation.get().allDependencies.forEach {
-                            dependencies.addDependency(it, "runtime")
-                        }
-                    }
                 }
             }
         }
