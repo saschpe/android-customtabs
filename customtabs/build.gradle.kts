@@ -65,7 +65,7 @@ publishing {
         register<MavenPublication>("mavenAndroid") {
             artifactId = "android-customtabs"
             groupId = "de.peilicke.sascha"
-            version = "3.0.3"
+            version = "3.1.0"
 
             afterEvaluate {
                 from(components["release"])

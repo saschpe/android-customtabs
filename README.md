@@ -52,7 +52,7 @@ repositories {
 }
 
 dependencies {
-    implementation("de.peilicke.sascha:android-customtabs:3.0.3")
+    implementation("de.peilicke.sascha:android-customtabs:3.1.0")
 }
 ```
 
