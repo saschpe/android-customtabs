@@ -31,7 +31,7 @@ android {
     namespace = "saschpe.android.customtabs"
 
     defaultConfig {
-        compileSdk = 31
+        compileSdk = 33
         minSdk = 16
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

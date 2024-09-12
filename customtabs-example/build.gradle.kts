@@ -30,9 +30,9 @@ android {
 
     defaultConfig {
         applicationId = "com.example.saschpe.customtabs"
-        compileSdk = 31
+        compileSdk = 33
         minSdk = 17
-        targetSdk = 31
+        targetSdk = 33
         versionCode = 170030003
         versionName = "3.0.3"
         base.archivesBaseName = "$applicationId-$versionName"
