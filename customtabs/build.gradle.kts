@@ -32,6 +32,8 @@ dependencies {
     testImplementation("org.mockito:mockito-core:5.13.0")
 }
 
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+
 android {
     namespace = "saschpe.android.customtabs"
 
@@ -47,13 +49,6 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    kotlinOptions.jvmTarget = "17"
 
     testOptions.unitTests.isIncludeAndroidResources = true
 

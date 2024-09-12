@@ -11,7 +11,7 @@
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
-    <bytecodeTargetLevel target="17">
+    <bytecodeTargetLevel target="21">
       <module name="Android.android-customtabs" target="11" />
     </bytecodeTargetLevel>
   </component>
