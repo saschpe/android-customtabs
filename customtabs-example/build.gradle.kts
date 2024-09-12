@@ -26,12 +26,13 @@ repositories {
 }
 
 android {
-    compileSdkVersion(29)
+    namespace = "com.example.saschpe.customtabs"
 
     defaultConfig {
         applicationId = "com.example.saschpe.customtabs"
-        minSdkVersion(17)
-        targetSdkVersion(29)
+        compileSdk = 31
+        minSdk = 17
+        targetSdk = 31
         versionCode = 170030003
         versionName = "3.0.3"
         base.archivesBaseName = "$applicationId-$versionName"

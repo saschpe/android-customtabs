@@ -28,17 +28,16 @@ repositories {
 }
 
 android {
-    compileSdkVersion(29)
+    namespace = "saschpe.android.customtabs"
 
     defaultConfig {
-        minSdkVersion(16)
-        targetSdkVersion(29)
-        versionName = "3.0.3"
+        compileSdk = 31
+        minSdk = 16
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        named("release") {
+        release {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
@@ -85,6 +84,7 @@ publishing {
     publications {
         register<MavenPublication>("mavenAndroid") {
             artifactId = "android-customtabs"
+            version = "3.0.3"
 
             afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
             artifact(tasks.getByName("javadocJar"))

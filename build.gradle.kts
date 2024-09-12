@@ -19,14 +19,14 @@ buildscript {
         google()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:4.1.1")
+        classpath("com.android.tools.build:gradle:7.4.2")
     }
 }
 
 plugins {
     id("com.diffplug.spotless") version "5.12.4"
     id("com.github.ben-manes.versions") version "0.38.0"
-    kotlin("jvm") version "1.5.0"
+    kotlin("jvm") version "1.6.20"
 }
 
 repositories {
