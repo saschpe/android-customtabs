@@ -22,9 +22,15 @@ plugins {
     signing
 }
 
-repositories {
-    google()
-    mavenCentral()
+dependencies {
+    api("androidx.browser:browser:1.2.0")
+
+    implementation("androidx.appcompat:appcompat:1.2.0")
+
+    testImplementation("androidx.test:core:1.3.0")
+    testImplementation("androidx.test.ext:junit:1.1.2")
+    testImplementation("org.robolectric:robolectric:4.7.1")
+    testImplementation("org.mockito:mockito-core:3.9.0")
 }
 
 android {
@@ -53,17 +59,6 @@ android {
     testOptions.unitTests.isIncludeAndroidResources = true
 }
 
-dependencies {
-    api("androidx.browser:browser:1.2.0")
-
-    implementation("androidx.appcompat:appcompat:1.2.0")
-
-    testImplementation("androidx.test:core:1.3.0")
-    testImplementation("androidx.test.ext:junit:1.1.2")
-    testImplementation("org.robolectric:robolectric:4.7.1")
-    testImplementation("org.mockito:mockito-core:3.9.0")
-}
-
 group = "de.peilicke.sascha"
 version = android.defaultConfig.versionName.toString()
 
@@ -71,7 +66,7 @@ tasks {
     register("javadocJar", Jar::class) {
         dependsOn(named("dokkaHtml"))
         archiveClassifier.set("javadoc")
-        from("$buildDir/dokka/html")
+        from("${layout.buildDirectory}/dokka/html")
     }
 
     register("sourcesJar", Jar::class) {

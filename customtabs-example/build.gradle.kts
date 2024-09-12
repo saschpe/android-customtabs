@@ -20,9 +20,11 @@ plugins {
     kotlin("android.extensions")
 }
 
-repositories {
-    google()
-    mavenCentral()
+dependencies {
+    implementation(project(":customtabs"))
+    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
+    implementation("androidx.vectordrawable:vectordrawable-animated:1.1.0")
+    implementation("com.google.android.material:material:1.3.0")
 }
 
 android {
@@ -35,13 +37,13 @@ android {
         targetSdk = 33
         versionCode = 170030003
         versionName = "3.0.3"
-        base.archivesBaseName = "$applicationId-$versionName"
+        base.archivesName = "$applicationId-$versionName"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
 
     buildTypes {
-        named("release") {
+        release {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
@@ -55,11 +57,4 @@ android {
     }
 
     kotlinOptions.jvmTarget = "1.8"
-}
-
-dependencies {
-    implementation(project(":customtabs"))
-    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
-    implementation("androidx.vectordrawable:vectordrawable-animated:1.1.0")
-    implementation("com.google.android.material:material:1.3.0")
 }
