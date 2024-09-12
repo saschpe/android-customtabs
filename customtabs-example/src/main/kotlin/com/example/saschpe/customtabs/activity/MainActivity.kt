@@ -35,7 +35,7 @@ import saschpe.android.customtabs.WebViewFallback
 
 class MainActivity : AppCompatActivity() {
     /**
-     * Apply some sane defaults across a single app.
+     * Apply some sensible defaults across a single app.
      * Not strictly necessary but simplifies code when having many different
      * custom tab intents in one app.
      *
@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Start GitHub project custom tab
+     * Start a GitHub project custom tab
      *
      * See https://developer.chrome.com/multidevice/android/customtabs
      */

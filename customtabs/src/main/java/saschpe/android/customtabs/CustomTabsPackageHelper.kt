@@ -36,13 +36,13 @@ internal object CustomTabsPackageHelper {
 
     /**
      * Goes through all apps that handle VIEW intents and have a warmup service. Picks
-     * the one chosen by the user if there is one, otherwise makes a best effort to return a
+     * the one chosen by the user if there is one, otherwise makes the best effort to return a
      * valid package name.
      *
      * This is **not** threadsafe.
      *
      * @param context [Context] to use for accessing [PackageManager].
-     * @return The package name recommended to use for connecting to custom tabs related components.
+     * @return The package name recommended for connecting to custom tabs related components.
      */
     @JvmStatic
     fun getPackageNameToUse(context: Context): String? {
@@ -52,7 +52,7 @@ internal object CustomTabsPackageHelper {
         val pm = context.packageManager
 
         // Get default VIEW intent handler.
-        val activityIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://www.example.com"))
+        val activityIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://www.example.com"))
         val defaultHandlerInfo = pm.resolveActivity(activityIntent, 0)
         val defaultHandlerPackageName: String? = defaultHandlerInfo?.activityInfo?.packageName
 

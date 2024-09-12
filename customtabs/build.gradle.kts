@@ -60,7 +60,7 @@ dependencies {
 
     testImplementation("androidx.test:core:1.3.0")
     testImplementation("androidx.test.ext:junit:1.1.2")
-    testImplementation("org.robolectric:robolectric:4.5.1")
+    testImplementation("org.robolectric:robolectric:4.7.1")
     testImplementation("org.mockito:mockito-core:3.9.0")
 }
 

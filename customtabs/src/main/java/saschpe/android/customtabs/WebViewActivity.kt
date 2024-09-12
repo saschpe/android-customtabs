@@ -45,7 +45,7 @@ class WebViewActivity : AppCompatActivity(R.layout.activity_webview) {
         url?.let { webView.loadUrl(it) }
         webView.settings.javaScriptEnabled = true
 
-        // No title provided. Use the website's once it's loaded...
+        // No title provided. Use the website once it's loaded...
         if (title == null) {
             webView.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView, url: String) {
