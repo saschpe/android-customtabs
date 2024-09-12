@@ -80,7 +80,7 @@ class MainActivity : AppCompatActivity() {
             this,
             customTabsIntent,
             Uri.parse(GITHUB_PAGE),
-            WebViewFallback()
+            WebViewFallback(),
         )
     }
 
@@ -98,7 +98,8 @@ class MainActivity : AppCompatActivity() {
 
         val bitmap = Bitmap.createBitmap(
             drawable.intrinsicWidth,
-            drawable.intrinsicHeight, Bitmap.Config.ARGB_8888
+            drawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888,
         )
         val canvas = Canvas(bitmap)
         drawable.setBounds(0, 0, canvas.width, canvas.height)

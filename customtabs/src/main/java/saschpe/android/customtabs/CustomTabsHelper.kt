@@ -84,7 +84,7 @@ class CustomTabsHelper {
         val myConnection = object : CustomTabsServiceConnection() {
             override fun onCustomTabsServiceConnected(
                 name: ComponentName,
-                newClient: CustomTabsClient
+                newClient: CustomTabsClient,
             ) {
                 client = newClient
                 client?.warmup(0L)
@@ -156,7 +156,7 @@ class CustomTabsHelper {
             context: Context,
             customTabsIntent: CustomTabsIntent,
             uri: Uri,
-            fallback: CustomTabFallback?
+            fallback: CustomTabFallback?,
         ) {
             val packageName = getPackageNameToUse(context)
             // If we can't find a package name, it means there's no browser that supports Chrome Custom Tabs installed.
@@ -168,7 +168,7 @@ class CustomTabsHelper {
                     customTabsIntent.intent
                         .putExtra(
                             Intent.EXTRA_REFERRER,
-                            Uri.parse("${Intent.URI_ANDROID_APP_SCHEME}//${context.packageName}")
+                            Uri.parse("${Intent.URI_ANDROID_APP_SCHEME}//${context.packageName}"),
                         )
                 }
                 customTabsIntent.intent.setPackage(packageName)
@@ -177,9 +177,12 @@ class CustomTabsHelper {
         }
 
         fun addKeepAliveExtra(context: Context, intent: Intent) {
-            intent.putExtra(EXTRA_CUSTOM_TABS_KEEP_ALIVE, Intent().apply {
-                setClassName(context.packageName, KeepAliveService::class.java.canonicalName as String)
-            })
+            intent.putExtra(
+                EXTRA_CUSTOM_TABS_KEEP_ALIVE,
+                Intent().apply {
+                    setClassName(context.packageName, KeepAliveService::class.java.canonicalName as String)
+                },
+            )
         }
     }
 }

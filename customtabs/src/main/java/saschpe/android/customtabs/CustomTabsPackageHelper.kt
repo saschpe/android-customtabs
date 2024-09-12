@@ -76,8 +76,8 @@ internal object CustomTabsPackageHelper {
             packagesSupportingCustomTabs.isEmpty() -> null
             packagesSupportingCustomTabs.size == 1 -> packagesSupportingCustomTabs[0]
             !TextUtils.isEmpty(defaultHandlerPackageName) &&
-                    !hasSpecializedHandlerIntents(context, activityIntent)
-                    && packagesSupportingCustomTabs.contains(defaultHandlerPackageName)
+                !hasSpecializedHandlerIntents(context, activityIntent) &&
+                packagesSupportingCustomTabs.contains(defaultHandlerPackageName)
             -> defaultHandlerPackageName
             packagesSupportingCustomTabs.contains(STABLE_PACKAGE) -> STABLE_PACKAGE
             packagesSupportingCustomTabs.contains(BETA_PACKAGE) -> BETA_PACKAGE

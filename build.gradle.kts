@@ -24,28 +24,22 @@ buildscript {
 }
 
 plugins {
-    id("com.diffplug.spotless") version "5.12.4"
-    id("com.github.ben-manes.versions") version "0.38.0"
+    id("com.diffplug.spotless") version "6.25.0"
+    id("com.github.ben-manes.versions") version "0.44.0"
     kotlin("jvm") version "1.6.20"
 }
 
 spotless {
-    format("misc") {
-        target("**/*.gradle", "**/*.md", "**/.gitignore")
-        trimTrailingWhitespace()
-        endWithNewline()
-    }
     freshmark {
         target("**/*.md")
         propertiesFile("gradle.properties")
     }
     kotlin {
-        target("*/src/**/*.kt")
-        ktlint().userData(mapOf("disabled_rules" to "no-wildcard-imports"))
+        target("**/*.kt")
+        ktlint().setEditorConfigPath("${project.rootDir}/.editorconfig")
     }
     kotlinGradle {
-        target("**/*.gradle.kts")
-        ktlint()
+        ktlint().setEditorConfigPath("${project.rootDir}/.editorconfig")
     }
 }
 
