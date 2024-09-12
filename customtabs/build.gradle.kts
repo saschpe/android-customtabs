@@ -139,14 +139,16 @@ publishing {
         }
     }
 
-    repositories {
-        maven {
-            name = "sonatype"
-            credentials {
-                username = Secrets.Sonatype.user
-                password = Secrets.Sonatype.apiKey
+    if (hasProperty("sonatypeUser") && hasProperty("sonatypePass")) {
+        repositories {
+            maven {
+                name = "sonatype"
+                credentials {
+                    username = property("sonatypeUser") as String
+                    password = property("sonatypePass") as String
+                }
+                url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
             }
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
         }
     }
 }
