@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env sh
 #
 # Collection of shared functions
 #
@@ -8,31 +8,33 @@ RED='\033[0;31m'
 YELLOW='\033[0;33m'
 NC='\033[0m' # No Color
 
-function approve {
-    echo -e "${GREEN}$@${NC}"
+approve() {
+  printf "${GREEN}%s${NC}\n" "$*"
 }
 
-function warn {
-    echo -e "${YELLOW}$@${NC}"
+warn() {
+  printf "${YELLOW}%s${NC}\n" "$*"
 }
 
-function die {
-    echo -e "${RED}$@${NC}"
-    exit 1
+die() {
+  printf "${RED}%s${NC}\n" "$*"
+  exit 1
 }
 
-function safe {
-    "$@"
-    local status=$?
-    if [[ ${status} -ne 0 ]]; then
-        die "\nBUILD FAILED\nAfter invoking \"$@\"\n" >&2
-    fi
-    return ${status}
+safe() {
+  "$@"
+  _status=$?
+  if [ ${_status} -ne 0 ]; then
+    die "\nBUILD FAILED\nAfter invoking \"$*\"\n" >&2
+  fi
+  return ${_status}
 }
 
-function sed2 {
-    sed -i'.bak' "$1" ${@:2}
-    for file in "${@:2}" ; do
-        rm "${file}.bak"
-    done
+sed2() {
+  cmd="${1}"
+  shift
+  sed -i'.bak' "${cmd}" "${@}"
+  for file in "${@}"; do
+    rm "${file}.bak"
+  done
 }
