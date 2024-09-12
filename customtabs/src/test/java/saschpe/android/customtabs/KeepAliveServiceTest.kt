@@ -39,7 +39,7 @@ class KeepAliveServiceTest {
         // Act, assert
         assertEquals(
             KeepAliveService().onBind(mockIntent),
-            KeepAliveService().onBind(Mockito.mock(Intent::class.java))
+            KeepAliveService().onBind(Mockito.mock(Intent::class.java)),
         )
     }
 }

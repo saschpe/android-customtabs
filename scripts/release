@@ -11,35 +11,33 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 . "${SCRIPT_DIR}/inc.functions.sh"
 
 # Constants
-GRADLE_FILES=(
-    customtabs/build.gradle.kts
-    customtabs-example/build.gradle.kts
+FILES=(
+  customtabs-example/build.gradle.kts
+  customtabs/build.gradle.kts
 )
 
-
 # Functions
-function get_version_code {
-    echo $(grep "versionCode = " $1 | xargs | cut -d"=" -f2)
+usage() {
+  echo -e "Usage: $0 [VERSION_NAME]\n\n  Example: $0 0.0.1"
+  exit 1
 }
 
-function get_version_name {
-    echo $(grep "versionName = " $1 | xargs | cut -d"=" -f2)
+version_gt() {
+  test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"
 }
 
-function usage {
-    echo -e "Usage: $0 [VERSION_NAME]\n\n  Example: $0 0.0.1"
-    exit 1
+get_version_code() {
+    grep "versionCode = " "$1" | cut -d"=" -f2 | xargs
 }
 
-function version_gt() {
-    test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1";
+get_version_name() {
+  grep "versionName = " "$1" | cut -d"=" -f2 | xargs
 }
 
 # Checks
-if [[ $# -ne 1 ]] ; then
-    usage
+if [[ $# -ne 1 ]]; then
+  usage
 fi
-
 
 # Increase version name
 version_name_new=$1
@@ -47,31 +45,32 @@ version_name_new=$1
 # digits to ensure we can safely switch from 1.9.0 to 1.10.0. Padded, the
 # latter would yield '011000' as the new version code. The result has a length
 # of six digits.
-IFS='.' read -r -a version_name_new_array <<< "${version_name_new}"
+IFS='.' read -r -a version_name_new_array <<<"${version_name_new}"
 
-for gradle_file in ${GRADLE_FILES[@]} ; do
-    version_name_old=$(get_version_name ${gradle_file})
-    # To be able to compare with the previous version, do the same for the old
-    # version name.
-    IFS='.' read -r -a version_name_old_array <<< "${version_name_old}"
+version_name_old=$(get_version_name "${FILES[0]}")
 
-    if version_gt ${version_name_old} ${version_name_new}; then
-        die "Already at version ${version_name_old}"
-    fi
+for file in ${FILES[@]}; do
+  # To be able to compare with the previous version, do the same for the old
+  # version name.
+  IFS='.' read -r -a version_name_old_array <<<"${version_name_old}"
 
-    # Since we're otherwise fine, start changing the version name..
-    sed2 "s|versionName = \"${version_name_old}|versionName = \"${version_name_new}|" ${gradle_file}
+  if version_gt "${version_name_old}" "${version_name_new}"; then
+    die "Already at version ${version_name_old}"
+  fi
 
-    # Increment app version code for Google's Play Store (not applicable for libraries)
-    version_code_old=$(get_version_code ${gradle_file})
-    if [ -n "${version_code_old}" ] ; then
-        padded_sem_ver=$(printf "%02d%02d%02d\n" ${version_name_new_array[0]} ${version_name_new_array[1]} ${version_name_new_array[2]})
-        # Replace the last six digits with the new padded semantic version
-        version_code_new=${version_code_old::${#version_code_old}-6}${padded_sem_ver}
-        sed2 "s/versionCode = ${version_code_old}/versionCode = ${version_code_new}/" ${gradle_file}
-    fi
+  # Since we're otherwise fine, start changing the version name
+  sed2 "s|${version_name_old}|${version_name_new}|g" "${file}"
 
-    git_commit_files="${git_commit_files} ${gradle_file}"
+  # Increment app version code for Google's Play Store (not applicable for libraries)
+  version_code_old=$(get_version_code ${file})
+  if [ -n "${version_code_old}" ] ; then
+      padded_sem_ver=$(printf "%02d%02d%02d\n" ${version_name_new_array[0]} ${version_name_new_array[1]} ${version_name_new_array[2]})
+      # Replace the last six digits with the new padded semantic version
+      version_code_new=${version_code_old::${#version_code_old}-6}${padded_sem_ver}
+      sed2 "s/versionCode = ${version_code_old}/versionCode = ${version_code_new}/" ${file}
+  fi
+
+  git_commit_files="${git_commit_files} ${file}"
 done
 
 # Update README.md
@@ -81,4 +80,4 @@ git_commit_files="${git_commit_files} README.md"
 # Create a commit with appropriate tag
 git_commit_message="Release version ${version_name_new}"
 safe git commit --signoff ${git_commit_files} -m "${git_commit_message}"
-safe git tag -f release/${version_name_new}
+safe git tag -f "release/${version_name_new}"

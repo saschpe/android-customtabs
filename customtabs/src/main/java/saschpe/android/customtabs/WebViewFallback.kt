@@ -33,8 +33,8 @@ class WebViewFallback : CustomTabFallback {
         context?.startActivity(
             Intent(context, WebViewActivity::class.java).putExtra(
                 WebViewActivity.EXTRA_URL,
-                uri.toString()
-            )
+                uri.toString(),
+            ),
         )
     }
 }

@@ -17,49 +17,45 @@
 plugins {
     id("com.android.application")
     kotlin("android")
-    kotlin("android.extensions")
 }
 
-repositories {
-    google()
-    mavenCentral()
+dependencies {
+    implementation(project(":customtabs"))
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation("androidx.vectordrawable:vectordrawable-animated:1.2.0")
+    implementation("com.google.android.material:material:1.12.0")
 }
+
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 
 android {
     namespace = "com.example.saschpe.customtabs"
 
     defaultConfig {
         applicationId = "com.example.saschpe.customtabs"
-        compileSdk = 33
-        minSdk = 17
-        targetSdk = 33
-        versionCode = 170030003
-        versionName = "3.0.3"
-        base.archivesBaseName = "$applicationId-$versionName"
+        compileSdk = 34
+        minSdk = 21
+        targetSdk = 34
+        versionCode = 210030100
+        versionName = "3.1.0"
+        base.archivesName = "$applicationId-$versionName"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
 
+    buildFeatures {
+        viewBinding = true
+    }
+
     buildTypes {
-        named("release") {
+        debug {
+            applicationIdSuffix = ".debug"
+        }
+        release {
             isMinifyEnabled = true
             isShrinkResources = true
-            proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            proguardFiles(getDefaultProguardFile("proguard-android.txt"))
             signingConfig = signingConfigs.getByName("debug")
         }
     }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions.jvmTarget = "1.8"
-}
-
-dependencies {
-    implementation(project(":customtabs"))
-    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
-    implementation("androidx.vectordrawable:vectordrawable-animated:1.1.0")
-    implementation("com.google.android.material:material:1.3.0")
 }
