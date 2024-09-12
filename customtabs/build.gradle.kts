@@ -28,17 +28,16 @@ repositories {
 }
 
 android {
-    compileSdkVersion(29)
+    namespace = "saschpe.android.customtabs"
 
     defaultConfig {
-        minSdkVersion(16)
-        targetSdkVersion(29)
-        versionName = "3.0.3"
+        compileSdk = 33
+        minSdk = 16
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
-        named("release") {
+        release {
             isMinifyEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
@@ -61,7 +60,7 @@ dependencies {
 
     testImplementation("androidx.test:core:1.3.0")
     testImplementation("androidx.test.ext:junit:1.1.2")
-    testImplementation("org.robolectric:robolectric:4.5.1")
+    testImplementation("org.robolectric:robolectric:4.7.1")
     testImplementation("org.mockito:mockito-core:3.9.0")
 }
 
@@ -85,6 +84,7 @@ publishing {
     publications {
         register<MavenPublication>("mavenAndroid") {
             artifactId = "android-customtabs"
+            version = "3.0.3"
 
             afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
             artifact(tasks.getByName("javadocJar"))
@@ -139,14 +139,16 @@ publishing {
         }
     }
 
-    repositories {
-        maven {
-            name = "sonatype"
-            credentials {
-                username = Secrets.Sonatype.user
-                password = Secrets.Sonatype.apiKey
+    if (hasProperty("sonatypeUser") && hasProperty("sonatypePass")) {
+        repositories {
+            maven {
+                name = "sonatype"
+                credentials {
+                    username = property("sonatypeUser") as String
+                    password = property("sonatypePass") as String
+                }
+                url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
             }
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
         }
     }
 }

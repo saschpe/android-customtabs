@@ -20,7 +20,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import saschpe.android.customtabs.CustomTabsActivityLifecycleCallbacks
 
 /**
- * Optional pre-loading for improved performance
+ * Optional preloading for improved performance
  */
 class Application : android.app.Application() {
     override fun onCreate() {

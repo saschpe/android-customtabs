@@ -26,12 +26,13 @@ repositories {
 }
 
 android {
-    compileSdkVersion(29)
+    namespace = "com.example.saschpe.customtabs"
 
     defaultConfig {
         applicationId = "com.example.saschpe.customtabs"
-        minSdkVersion(17)
-        targetSdkVersion(29)
+        compileSdk = 33
+        minSdk = 17
+        targetSdk = 33
         versionCode = 170030003
         versionName = "3.0.3"
         base.archivesBaseName = "$applicationId-$versionName"
@@ -54,8 +55,6 @@ android {
     }
 
     kotlinOptions.jvmTarget = "1.8"
-
-    sourceSets.forEach { it.java.srcDir("src/${it.name}/kotlin") }
 }
 
 dependencies {

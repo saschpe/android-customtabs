@@ -43,7 +43,7 @@ class CustomTabsHelper {
         connection?.let {
             try {
                 activity.unbindService(it)
-            } catch (e: IllegalArgumentException) {
+            } catch (_: IllegalArgumentException) {
             }
             client = null
             customTabsSession = null
@@ -145,10 +145,10 @@ class CustomTabsHelper {
             "android.support.customtabs.extra.KEEP_ALIVE"
 
         /**
-         * Opens the URL on a Custom Tab if possible. Otherwise fallsback to opening it on a WebView
+         * Opens the URL on a Custom Tab if possible. Otherwise, falls back to opening it on a WebView
          *
          * @param context The host activity
-         * @param customTabsIntent a CustomTabsIntent to be used if Custom Tabs is available
+         * @param customTabsIntent customTabsIntent to be used if Custom Tabs is available
          * @param uri the Uri to be opened
          * @param fallback a CustomTabFallback to be used if Custom Tabs is not available
          */
@@ -159,8 +159,8 @@ class CustomTabsHelper {
             fallback: CustomTabFallback?
         ) {
             val packageName = getPackageNameToUse(context)
-            // If we cant find a package name, it means there's no browser that supports
-            // Chrome Custom Tabs installed. So, we fallback to the web-view
+            // If we can't find a package name, it means there's no browser that supports Chrome Custom Tabs installed.
+            // So, we fall back to the web-view
             if (packageName == null) {
                 fallback?.openUri(context, uri)
             } else {
