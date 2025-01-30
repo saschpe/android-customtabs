@@ -1,5 +1,16 @@
 name: Main CI
-on: [ push ]
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - .gitignore
+      - LICENSE
+      - README.md
+  pull_request:
+    branches:
+      - main
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
