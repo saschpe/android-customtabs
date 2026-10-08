@@ -107,11 +107,10 @@ class CustomTabsHelper {
         CustomTabsClient.bindCustomTabsService(activity, packageName, myConnection)
     }
 
-    fun mayLaunchUrl(uri: Uri, extras: Bundle?, otherLikelyBundles: List<Bundle?>?) =
-        when (client) {
-            null -> false
-            else -> session?.mayLaunchUrl(uri, extras, otherLikelyBundles) ?: false
-        }
+    fun mayLaunchUrl(uri: Uri, extras: Bundle?, otherLikelyBundles: List<Bundle?>?) = when (client) {
+        null -> false
+        else -> session?.mayLaunchUrl(uri, extras, otherLikelyBundles) ?: false
+    }
 
     /**
      * A Callback for when the service is connected or disconnected. Use those callbacks to

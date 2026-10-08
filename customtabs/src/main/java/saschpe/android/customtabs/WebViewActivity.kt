@@ -64,6 +64,7 @@ class WebViewActivity : AppCompatActivity(R.layout.activity_webview) {
             finish()
             true
         }
+
         else -> super.onOptionsItemSelected(item)
     }
 

@@ -74,15 +74,22 @@ internal object CustomTabsPackageHelper {
         // and service calls.
         packageNameToUse = when {
             packagesSupportingCustomTabs.isEmpty() -> null
+
             packagesSupportingCustomTabs.size == 1 -> packagesSupportingCustomTabs[0]
+
             !TextUtils.isEmpty(defaultHandlerPackageName) &&
                 !hasSpecializedHandlerIntents(context, activityIntent) &&
                 packagesSupportingCustomTabs.contains(defaultHandlerPackageName)
             -> defaultHandlerPackageName
+
             packagesSupportingCustomTabs.contains(STABLE_PACKAGE) -> STABLE_PACKAGE
+
             packagesSupportingCustomTabs.contains(BETA_PACKAGE) -> BETA_PACKAGE
+
             packagesSupportingCustomTabs.contains(DEV_PACKAGE) -> DEV_PACKAGE
+
             packagesSupportingCustomTabs.contains(LOCAL_PACKAGE) -> LOCAL_PACKAGE
+
             else -> null
         }
         return packageNameToUse
