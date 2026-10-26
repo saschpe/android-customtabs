@@ -22,7 +22,7 @@ plugins {
 }
 
 dependencies {
-    api("androidx.browser:browser:1.8.0")
+    api("androidx.browser:browser:1.10.0")
 
     implementation("androidx.appcompat:appcompat:1.7.0")
 
