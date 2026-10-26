@@ -24,7 +24,7 @@ plugins {
 dependencies {
     api("androidx.browser:browser:1.8.0")
 
-    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("androidx.appcompat:appcompat:1.8.0")
 
     testImplementation("androidx.test:core:1.6.1")
     testImplementation("androidx.test.ext:junit:1.2.1")
