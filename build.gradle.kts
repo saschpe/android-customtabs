@@ -16,7 +16,7 @@
 
 plugins {
     id("com.android.application") version "9.5.1" apply false
-    id("com.diffplug.spotless") version "8.10.4"
+    id("com.diffplug.spotless") version "8.11.0"
     id("com.github.ben-manes.versions") version "0.67.0"
     kotlin("android") version "2.4.21" apply false
 }
